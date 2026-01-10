@@ -1,13 +1,16 @@
 "use client";
 
-export const runtime = "edge";
-
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import FileUpload from "@/app/components/FileUpload";
+import ChatBox from "@/app/components/ChatBox";
+
+export const runtime = "edge";
 
 type Project = {
   id: string;
   domain: string;
+  created_at: string;
 };
 
 export default function ProjectDetailPage() {
@@ -18,136 +21,96 @@ export default function ProjectDetailPage() {
   const [loading, setLoading] = useState(true);
   const [ingesting, setIngesting] = useState(false);
   const [result, setResult] = useState<string>("");
-  const [file, setFile] = useState<File | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const [uploadResult, setUploadResult] = useState("");
 
-  const apiKey =
-    typeof window !== "undefined"
-      ? localStorage.getItem("chattydevs_api_key")
-      : null;
+  useEffect(() => {
+    const apiKey = localStorage.getItem("chattydevs_api_key");
 
-    useEffect(() => {
-      async function loadProject() {
-        if (!apiKey) return;
+    if (!apiKey) {
+      setLoading(false);
+      return;
+    }
 
-        try {
-          const res = await fetch(
-            `https://api.skakram1110.workers.dev/projects/${projectId}`,
-            {
-              headers: {
-                Authorization: `Bearer ${apiKey}`,
-              },
-            }
-          );
-
-          const data = await res.json();
-
-          if (!res.ok) {
-            throw new Error(data.error || "Failed to load project");
-          }
-
-          setProject(data.project);
-        } catch (err) {
-          console.error(err);
-          setProject(null);
-        } finally {
-          setLoading(false);
-        }
-      }
-
-      loadProject();
-    }, [projectId, apiKey]);
-
-
-    async function handleIngest() {
-      if (!apiKey || !project) return;
-
-      setIngesting(true);
-      setResult("");
-
+    async function fetchProject() {
       try {
         const res = await fetch(
-          "https://api.skakram1110.workers.dev/projects/ingest",
+          `https://api.skakram1110.workers.dev/projects/${projectId}`,
           {
-            method: "POST",
             headers: {
-              "Content-Type": "application/json",
               Authorization: `Bearer ${apiKey}`,
             },
-            body: JSON.stringify({
-              project_id: project.id,
-              start_url: project.domain,
-              max_pages: 5,
-            }),
           }
         );
 
         const data = await res.json();
 
         if (!res.ok) {
-          throw new Error(data.error || "Ingestion failed");
+          throw new Error(data.error || "Failed to fetch project");
         }
 
-        setResult(
-          `Indexed ${data.pages_crawled} pages, ${data.chunks_indexed} chunks`
-        );
-      } catch (err) {
+        setProject(data.project);
+      } catch (err: unknown) {
         if (err instanceof Error) {
           setResult(err.message);
         } else {
-          setResult("Operation failed");
+          setResult("Failed to load project");
         }
       } finally {
-        setIngesting(false);
+        setLoading(false);
       }
     }
-    async function handleUpload() {
-    if (!apiKey || !project || !file) return;
 
-    setUploading(true);
-    setUploadResult("");
+    fetchProject();
+  }, [projectId]);
+
+  async function handleIngest() {
+    const apiKey = localStorage.getItem("chattydevs_api_key");
+    if (!apiKey || !project) return;
+
+    setIngesting(true);
+    setResult("");
 
     try {
-      const formData = new FormData();
-      formData.append("project_id", project.id);
-      formData.append("file", file);
-
       const res = await fetch(
-        "https://api.skakram1110.workers.dev/projects/upload",
+        "https://api.skakram1110.workers.dev/projects/ingest",
         {
           method: "POST",
           headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${apiKey}`,
           },
-          body: formData,
+          body: JSON.stringify({
+            project_id: project.id,
+            start_url: project.domain,
+            max_pages: 5,
+          }),
         }
       );
 
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || "Upload failed");
+        throw new Error(data.error || "Ingestion failed");
       }
 
-      setUploadResult(
-        `Uploaded ${data.filename} → ${data.chunks_indexed} chunks indexed`
+      setResult(
+        `Indexed ${data.pages_crawled} pages, ${data.chunks_indexed} chunks`
       );
-    } catch (err) {
+    } catch (err: unknown) {
       if (err instanceof Error) {
-        setUploadResult(err.message);
+        setResult(err.message);
       } else {
-        setUploadResult("Upload failed");
+        setResult("Ingestion failed");
       }
     } finally {
-      setUploading(false);
+      setIngesting(false);
     }
   }
 
   if (loading) return <p>Loading...</p>;
 
-  if (!project)
+  if (!project) {
     return <p className="text-red-600">Project not found</p>;
+  }
 
   return (
     <div className="space-y-6">
@@ -164,7 +127,7 @@ export default function ProjectDetailPage() {
       {/* Training */}
       <div className="bg-white border rounded p-4 space-y-3">
         <h2 className="font-medium">Training</h2>
-
+        <FileUpload projectId={project.id} />
         <button
           onClick={handleIngest}
           disabled={ingesting}
@@ -177,29 +140,8 @@ export default function ProjectDetailPage() {
           <p className="text-sm text-gray-700">{result}</p>
         )}
       </div>
-      {/* File Upload */}
-      <div className="bg-white border rounded p-4 space-y-3">
-        <h2 className="font-medium">Upload Documents</h2>
 
-        <input
-          type="file"
-          accept=".pdf,.txt,.csv"
-          onChange={(e) => setFile(e.target.files?.[0] || null)}
-          className="text-sm"
-        />
-
-        <button
-          onClick={handleUpload}
-          disabled={!file || uploading}
-          className="bg-black text-white px-4 py-2 rounded text-sm disabled:opacity-60"
-        >
-          {uploading ? "Uploading..." : "Upload File"}
-        </button>
-
-        {uploadResult && (
-          <p className="text-sm text-gray-700">{uploadResult}</p>
-        )}
-      </div>
+      <ChatBox projectId={project.id} />
 
       {/* Widget snippet */}
       <div className="bg-white border rounded p-4">
