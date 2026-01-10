@@ -40,8 +40,12 @@ export default function ProjectsPage() {
         }
 
         setProjects(data.projects || []);
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("Failed to load projects");
+        }
       } finally {
         setLoading(false);
       }

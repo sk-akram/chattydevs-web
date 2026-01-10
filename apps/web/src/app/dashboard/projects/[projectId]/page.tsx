@@ -90,8 +90,12 @@ export default function ProjectDetailPage() {
         setResult(
           `Indexed ${data.pages_crawled} pages, ${data.chunks_indexed} chunks`
         );
-      } catch (err: any) {
-        setResult(err.message);
+      } catch (err) {
+        if (err instanceof Error) {
+          setResult(err.message);
+        } else {
+          setResult("Operation failed");
+        }
       } finally {
         setIngesting(false);
       }
@@ -127,8 +131,12 @@ export default function ProjectDetailPage() {
       setUploadResult(
         `Uploaded ${data.filename} → ${data.chunks_indexed} chunks indexed`
       );
-    } catch (err: any) {
-      setUploadResult(err.message);
+    } catch (err) {
+      if (err instanceof Error) {
+        setUploadResult(err.message);
+      } else {
+        setUploadResult("Upload failed");
+      }
     } finally {
       setUploading(false);
     }

@@ -46,8 +46,12 @@ export default function NewProjectPage() {
 
       // Redirect to project page
       router.push(`/dashboard/projects/${data.project_id}`);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Failed to create project");
+      }
     } finally {
       setLoading(false);
     }
