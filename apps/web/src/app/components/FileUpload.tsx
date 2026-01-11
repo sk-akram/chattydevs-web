@@ -86,12 +86,14 @@ export default function FileUpload({ projectId }: Props) {
       )}
       <h2 className="font-semibold text-lg text-white">Upload documents</h2>
 
-      <input
-        type="file"
-        accept=".pdf,.txt,.csv"
-        onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-        className="text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-gray-800 file:text-gray-300 hover:file:bg-gray-700 transition-colors duration-150"
-      />
+      <div className="border-dashed border-2 border-gray-600 rounded-lg p-4">
+        <input
+          type="file"
+          accept=".pdf,.txt,.csv"
+          onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+          className="text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-gray-800 file:text-gray-300 hover:file:bg-gray-700 transition-colors duration-150"
+        />
+      </div>
 
       <button
         onClick={handleUpload}

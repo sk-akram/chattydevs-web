@@ -105,7 +105,7 @@ export default function ChatBox({ projectId }: Props) {
       </div>
 
       {/* Input */}
-      <div className="flex gap-3">
+      <div className="flex gap-3 sticky bottom-0 bg-gray-900 p-3">
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}

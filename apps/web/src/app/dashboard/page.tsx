@@ -9,22 +9,22 @@ export default function DashboardPage() {
       <p className="text-gray-400 mb-12 max-w-2xl">
         Manage your chatbot projects and API keys here.
       </p>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-        <Card>
-          <h3 className="font-semibold text-lg text-white mb-2">Projects</h3>
-          <p className="text-sm text-gray-300 mt-2">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12">
+        <Card className="p-8">
+          <h3 className="font-semibold text-lg text-white mb-4">Projects</h3>
+          <p className="text-sm text-gray-300">
             Create and manage chatbot projects.
           </p>
         </Card>
-        <Card>
-          <h3 className="font-semibold text-lg text-white mb-2">API Keys</h3>
-          <p className="text-sm text-gray-300 mt-2">
+        <Card className="p-8">
+          <h3 className="font-semibold text-lg text-white mb-4">API Keys</h3>
+          <p className="text-sm text-gray-300">
             Generate and rotate API keys.
           </p>
         </Card>
-        <Card>
-          <h3 className="font-semibold text-lg text-white mb-2">Usage</h3>
-          <p className="text-sm text-gray-300 mt-2">
+        <Card className="p-8">
+          <h3 className="font-semibold text-lg text-white mb-4">Usage</h3>
+          <p className="text-sm text-gray-300">
             Track requests and limits.
           </p>
         </Card>

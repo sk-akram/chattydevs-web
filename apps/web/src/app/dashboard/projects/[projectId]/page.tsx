@@ -136,29 +136,43 @@ export default function ProjectDetailPage() {
         <SectionHeading className="mb-0">Project: {project.domain}</SectionHeading>
         <span className="text-xs text-gray-400">ID: {project.id}</span>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-12">
+      <div className="grid grid-cols-1 gap-10 mb-12">
         <Card>
-          <h3 className="font-semibold text-lg text-white mb-3">Upload Files</h3>
-          <FileUpload projectId={projectId} />
+          <h3 className="font-semibold text-lg text-white mb-3">Project Info</h3>
+          <p className="text-sm text-gray-300">Domain: {project.domain}</p>
+          <p className="text-sm text-gray-300">Created: {new Date(project.created_at).toLocaleString()}</p>
+        </Card>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+          <Card>
+            <h3 className="font-semibold text-lg text-white mb-3">Upload Files</h3>
+            <FileUpload projectId={projectId} />
+          </Card>
+          <Card>
+            <h3 className="font-semibold text-lg text-white mb-3">Ingest Website</h3>
+            <button
+              onClick={handleIngest}
+              disabled={ingesting}
+              className="btn-primary w-full disabled:opacity-60"
+            >
+              {ingesting ? "Training..." : "Start Training"}
+            </button>
+            {result && (
+              <p className="text-sm text-green-500 font-medium mt-3">{result}</p>
+            )}
+          </Card>
+        </div>
+        <Card className="mb-12">
+          <h3 className="font-semibold text-lg text-white mb-3">Chat with your data</h3>
+          <ChatBox projectId={projectId} />
         </Card>
         <Card>
-          <h3 className="font-semibold text-lg text-white mb-3">Ingest Website</h3>
-          <button
-            onClick={handleIngest}
-            disabled={ingesting}
-            className="btn-primary w-full disabled:opacity-60"
-          >
-            {ingesting ? "Training..." : "Start Training"}
-          </button>
-          {result && (
-            <p className="text-sm text-green-500 font-medium mt-3">{result}</p>
-          )}
+          <h3 className="font-semibold text-lg text-white mb-3">Embed Code</h3>
+          <p className="text-sm text-gray-300">Use the following code to embed the chatbot on your site:</p>
+          <pre className="bg-gray-900 p-4 rounded-lg text-gray-300">
+            {`<script src="https://chattydevs.com/embed.js" data-project-id="${project.id}" data-api-key="your_api_key"></script>`}
+          </pre>
         </Card>
       </div>
-      <Card className="mb-12">
-        <h3 className="font-semibold text-lg text-white mb-3">Chat with your data</h3>
-        <ChatBox projectId={projectId} />
-      </Card>
     </Container>
   );
 }
