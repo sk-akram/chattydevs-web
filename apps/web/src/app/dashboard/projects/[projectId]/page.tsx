@@ -85,7 +85,7 @@ export default function ProjectDetailPage() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${apiKey}`,
           },
-          body: JSON.stringify({ project_id: project.id }),
+          body: JSON.stringify({ project_id: project.id, start_url: project.domain }),
         }
       );
       const data = await res.json();

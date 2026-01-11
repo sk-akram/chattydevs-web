@@ -75,35 +75,33 @@ export default function ProjectsPage() {
   }
 
   return (
-    <Container className="py-16">
-      <div className="flex flex-col sm:flex-row items-center justify-between mb-10 gap-6">
-        <SectionHeading className="mb-0">Projects</SectionHeading>
+    <Container className="py-16 max-w-7xl">
+      <SectionHeading>Projects</SectionHeading>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mt-6">
+        {projects.length === 0 ? (
+          <Card className="text-center py-16 text-gray-400">No projects found. Create your first project!</Card>
+        ) : (
+          projects.map((project) => (
+            <Card key={project.id} className="flex flex-col gap-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="font-semibold text-lg text-white">{project.domain}</div>
+                  <div className="text-xs text-gray-500">ID: {project.id}</div>
+                </div>
+                <Button variant="secondary" size="md">
+                  <Link href={`/dashboard/projects/${project.id}`}>Open</Link>
+                </Button>
+              </div>
+              <div className="text-xs text-gray-400 mt-3">Created: {new Date(project.created_at).toLocaleString()}</div>
+            </Card>
+          ))
+        )}
+      </div>
+      <div className="flex justify-end mt-6">
         <Button size="md">
           <Link href="/dashboard/projects/new">New Project</Link>
         </Button>
       </div>
-      {projects.length === 0 ? (
-        <Card className="text-center py-16 text-gray-400">No projects found. Create your first project!</Card>
-      ) : (
-        <ul className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          {projects.map((project) => (
-            <li key={project.id}>
-              <Card className="flex flex-col gap-3">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="font-semibold text-lg text-white">{project.domain}</div>
-                    <div className="text-xs text-gray-500">ID: {project.id}</div>
-                  </div>
-                  <Button variant="secondary" size="md">
-                    <Link href={`/dashboard/projects/${project.id}`}>Open</Link>
-                  </Button>
-                </div>
-                <div className="text-xs text-gray-400 mt-3">Created: {new Date(project.created_at).toLocaleString()}</div>
-              </Card>
-            </li>
-          ))}
-        </ul>
-      )}
     </Container>
   );
 }
