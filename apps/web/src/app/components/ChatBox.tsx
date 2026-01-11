@@ -74,42 +74,32 @@ export default function ChatBox({ projectId }: Props) {
   }
 
   return (
-    <div className="bg-white border rounded p-4 flex flex-col h-[420px]">
-      <h2 className="font-medium mb-2">Test your chatbot</h2>
+    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 flex flex-col h-[420px] shadow-md">
+      <h2 className="font-semibold mb-2 text-lg text-gray-900 dark:text-white">Test your chatbot</h2>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto space-y-3 text-sm mb-3">
+      <div className="flex-1 overflow-y-auto space-y-3 text-sm mb-3 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700">
         {messages.length === 0 && (
-          <p className="text-gray-400">
-            Ask something about your data…
-          </p>
+          <p className="text-gray-400">Ask something about your data…</p>
         )}
-
         {messages.map((m, i) => (
           <div
             key={i}
-            className={
-              m.role === "user"
-                ? "text-right"
-                : "text-left"
-            }
+            className={m.role === "user" ? "text-right" : "text-left"}
           >
             <div
               className={
                 m.role === "user"
-                  ? "inline-block bg-black text-white px-3 py-2 rounded"
-                  : "inline-block bg-gray-100 px-3 py-2 rounded"
+                  ? "inline-block bg-gradient-to-r from-black to-gray-800 text-white px-3 py-2 rounded-lg shadow"
+                  : "inline-block bg-gray-100 dark:bg-gray-700 px-3 py-2 rounded-lg shadow"
               }
             >
               {m.content}
             </div>
           </div>
         ))}
-
         {sending && (
-          <p className="text-gray-400 text-xs">
-            Assistant is typing…
-          </p>
+          <p className="text-gray-400 text-xs">Assistant is typing…</p>
         )}
       </div>
 
@@ -120,12 +110,12 @@ export default function ChatBox({ projectId }: Props) {
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && sendMessage()}
           placeholder="Ask a question..."
-          className="flex-1 border rounded px-3 py-2 text-sm"
+          className="flex-1 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
         />
         <button
           onClick={sendMessage}
           disabled={sending}
-          className="bg-black text-white px-4 py-2 rounded text-sm disabled:opacity-60"
+          className="bg-black hover:bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
         >
           Send
         </button>
