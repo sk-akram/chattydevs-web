@@ -39,6 +39,7 @@ export default function ProjectDetailPage() {
             headers: {
               Authorization: `Bearer ${apiKey}`,
             },
+            cache: "no-store", // 🚨 REQUIRED FIX
           }
         );
 
