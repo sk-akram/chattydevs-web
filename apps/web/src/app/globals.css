@@ -33,8 +33,10 @@
     --foreground: #ededed;
     --card-bg: #1e293b;
   }
+
 }
 
+body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
@@ -81,11 +83,11 @@ input, textarea, select {
   background: #fff;
   transition: border 0.15s;
 }
+
 input:focus, textarea:focus, select:focus {
   outline: none;
   border-color: var(--primary);
   box-shadow: 0 0 0 2px var(--primary-light);
-}
 }
 
 /* Custom scrollbar for modern look */
