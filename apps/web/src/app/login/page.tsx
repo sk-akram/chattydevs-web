@@ -12,6 +12,7 @@ import { Input } from "../components/ui/Input";
 import { SectionHeading } from "../components/ui/SectionHeading";
 import { Toast } from "../components/ui/Toast";
 
+export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
