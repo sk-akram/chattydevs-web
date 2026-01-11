@@ -2,15 +2,19 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+
 import LoadingSpinner from "@/app/components/LoadingSpinner";
+import { Toast } from "@/app/components/ui/Toast";
 
 export default function NewProjectPage() {
   const router = useRouter();
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showSuccess, setShowSuccess] = useState(false);
 
   async function handleCreate() {
+    if (loading) return; // Prevent double submit
     const apiKey = localStorage.getItem("chattydevs_api_key");
 
     if (!apiKey) {
@@ -25,6 +29,7 @@ export default function NewProjectPage() {
 
     setLoading(true);
     setError("");
+    setShowSuccess(false);
 
     try {
       const res = await fetch("https://api.skakram1110.workers.dev/projects", {
@@ -43,8 +48,11 @@ export default function NewProjectPage() {
         throw new Error(data.error || "Failed to create project");
       }
 
-      // Redirect to project page
-      router.push(`/dashboard/projects/${data.project_id}`);
+      setShowSuccess(true);
+      setTimeout(() => {
+        setShowSuccess(false);
+        router.push(`/dashboard/projects/${data.project_id}`);
+      }, 1200);
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -58,6 +66,12 @@ export default function NewProjectPage() {
 
   return (
     <div className="max-w-lg mx-auto py-12 px-4">
+      {showSuccess && (
+        <Toast message="Project created!" type="success" onClose={() => setShowSuccess(false)} />
+      )}
+      {error && (
+        <Toast message={error} type="error" onClose={() => setError("")} />
+      )}
       <h1 className="text-3xl font-extrabold mb-6 text-gray-900">New Project</h1>
       <div className="card">
         <label className="block mb-4">
@@ -79,8 +93,6 @@ export default function NewProjectPage() {
         >
           {loading ? <LoadingSpinner /> : "Create Project"}
         </button>
-
-        {error && <p className="text-red-600 text-sm mt-2">{error}</p>}
       </div>
     </div>
   );

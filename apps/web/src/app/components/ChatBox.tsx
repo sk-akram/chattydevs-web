@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import MessageBubble from "./MessageBubble";
+
 import LoadingSpinner from "./LoadingSpinner";
+import { Toast } from "./ui/Toast";
 
 type Message = {
   role: "user" | "assistant";
@@ -19,12 +21,18 @@ export default function ChatBox({ projectId }: Props) {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
 
+  const [showError, setShowError] = useState("");
+
   async function sendMessage() {
-    if (!input.trim()) return;
+    if (sending) return; // Prevent double submit
+    if (!input.trim()) {
+      setShowError("Please enter a message.");
+      return;
+    }
 
     const apiKey = localStorage.getItem("chattydevs_api_key");
     if (!apiKey) {
-      setError("Missing API key. Please sign up again.");
+      setShowError("Missing API key. Please sign up again.");
       return;
     }
 
@@ -37,6 +45,7 @@ export default function ChatBox({ projectId }: Props) {
     setInput("");
     setSending(true);
     setError("");
+    setShowError("");
 
     try {
       const res = await fetch(
@@ -66,8 +75,10 @@ export default function ChatBox({ projectId }: Props) {
       ]);
     } catch (err: unknown) {
       if (err instanceof Error) {
+        setShowError(err.message);
         setError(err.message);
       } else {
+        setShowError("Something went wrong");
         setError("Something went wrong");
       }
     } finally {
@@ -77,6 +88,9 @@ export default function ChatBox({ projectId }: Props) {
 
   return (
     <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 flex flex-col h-[420px] shadow-md">
+      {showError && (
+        <Toast message={showError} type="error" onClose={() => setShowError("")} />
+      )}
       <h2 className="font-semibold mb-2 text-lg text-gray-900 dark:text-white">Test your chatbot</h2>
 
       {/* Messages */}
@@ -101,18 +115,12 @@ export default function ChatBox({ projectId }: Props) {
         />
         <button
           onClick={sendMessage}
-          disabled={sending}
+          disabled={sending || !input.trim()}
           className="bg-black hover:bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
         >
           Send
         </button>
       </div>
-
-      {error && (
-        <p className="text-xs text-red-600 mt-2 flex items-center gap-1">
-          <span aria-hidden="true">❗</span> {error}
-        </p>
-      )}
     </div>
   );
 }

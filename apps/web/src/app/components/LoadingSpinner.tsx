@@ -1,10 +1,16 @@
 import React from "react";
 
-export default function LoadingSpinner() {
+type LoadingSpinnerProps = {
+  size?: number;
+  className?: string;
+};
+
+export default function LoadingSpinner({ size = 24, className = "" }: LoadingSpinnerProps) {
   return (
-    <div className="flex justify-center items-center py-8">
+    <div className={`flex justify-center items-center py-8 ${className}`}>
       <svg
-        className="animate-spin h-6 w-6 text-gray-500"
+        className="animate-spin text-gray-500"
+        style={{ width: size, height: size }}
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"

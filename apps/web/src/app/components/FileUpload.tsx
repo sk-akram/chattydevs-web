@@ -1,6 +1,8 @@
 "use client";
 
+
 import { useState } from "react";
+import { Toast } from "./ui/Toast";
 
 type Props = {
   projectId: string;
@@ -10,13 +12,31 @@ export default function FileUpload({ projectId }: Props) {
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState<string>("");
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showError, setShowError] = useState("");
 
   async function handleUpload() {
+    if (uploading) return; // Prevent double submit
     const apiKey = localStorage.getItem("chattydevs_api_key");
-    if (!apiKey || !file) return;
+    if (!apiKey) {
+      setShowError("Missing API key. Please sign up again.");
+      return;
+    }
+    if (!file) {
+      setShowError("No file selected.");
+      return;
+    }
+    // Validate file type
+    const allowedTypes = ["application/pdf", "text/plain", "text/csv"];
+    if (!allowedTypes.includes(file.type)) {
+      setShowError("Invalid file type. Only PDF, TXT, and CSV allowed.");
+      return;
+    }
 
     setUploading(true);
     setMessage("");
+    setShowError("");
+    setShowSuccess(false);
 
     try {
       const formData = new FormData();
@@ -43,21 +63,28 @@ export default function FileUpload({ projectId }: Props) {
       setMessage(
         `Uploaded "${data.filename}" → ${data.chunks_indexed} chunks indexed`
       );
+      setShowSuccess(true);
       setFile(null);
+      setTimeout(() => setShowSuccess(false), 2000);
     } catch (err: unknown) {
       if (err instanceof Error) {
-        setMessage(err.message);
+        setShowError(err.message);
       } else {
-        setMessage("Upload failed");
+        setShowError("Upload failed");
       }
     } finally {
       setUploading(false);
     }
   }
 
-
   return (
     <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 space-y-3 shadow-md">
+      {showSuccess && (
+        <Toast message="Upload complete!" type="success" onClose={() => setShowSuccess(false)} />
+      )}
+      {showError && (
+        <Toast message={showError} type="error" onClose={() => setShowError("")} />
+      )}
       <h2 className="font-semibold text-lg text-gray-900 dark:text-white">Upload documents</h2>
 
       <input

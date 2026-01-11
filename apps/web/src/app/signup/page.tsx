@@ -1,19 +1,31 @@
 "use client";
 
+
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
+import { Container } from "../components/ui/Container";
+import { Card } from "../components/ui/Card";
+import { Button } from "../components/ui/Button";
+import { Input } from "../components/ui/Input";
+
+import { SectionHeading } from "../components/ui/SectionHeading";
+import { Toast } from "../components/ui/Toast";
+
 
 export default function SignupPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showSuccess, setShowSuccess] = useState(false);
 
   async function handleSignup(e: React.FormEvent) {
     e.preventDefault();
+    if (loading) return; // Prevent double submit
     setError("");
+    setShowSuccess(false);
     setLoading(true);
     try {
       const res = await fetch(
@@ -29,7 +41,11 @@ export default function SignupPage() {
         throw new Error(data.error || "Signup failed");
       }
       localStorage.setItem("chattydevs_api_key", data.api_key);
-      router.push("/dashboard/projects");
+      setShowSuccess(true);
+      setTimeout(() => {
+        setShowSuccess(false);
+        router.push("/dashboard/projects");
+      }, 1200);
     } catch (err: unknown) {
       if (err instanceof Error) setError(err.message);
       else setError("Signup failed");
@@ -39,35 +55,35 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50 px-4">
-      <div className="w-full max-w-sm card">
-        <h1 className="text-2xl font-extrabold mb-1 text-gray-900">Create your account</h1>
-        <p className="text-sm text-gray-500 mb-6">Start building your AI chatbot</p>
-
-        <form onSubmit={handleSignup} className="space-y-4">
-          <input
+    <Container className="flex items-center justify-center min-h-screen py-12">
+      {showSuccess && (
+        <Toast message="Project created!" type="success" onClose={() => setShowSuccess(false)} />
+      )}
+      {error && (
+        <Toast message={error} type="error" onClose={() => setError("")} />
+      )}
+      <Card className="w-full max-w-md mx-auto">
+        <SectionHeading className="text-center mb-2">Create your account</SectionHeading>
+        <p className="text-sm text-gray-500 mb-8 text-center">Start building your AI chatbot</p>
+        <form onSubmit={handleSignup} className="space-y-5">
+          <Input
             type="email"
-            placeholder="Email"
+            placeholder="Email address"
             value={email}
-            onChange={e => setEmail(e.target.value)}
-            className="w-full"
+            onChange={(e) => setEmail(e.target.value)}
             required
+            label="Email address"
+            error={error}
           />
-          <button
-            type="submit"
-            className="btn-primary w-full disabled:opacity-60"
-            disabled={loading}
-          >
-            {loading ? <LoadingSpinner /> : "Sign up"}
-          </button>
-          {error && <p className="text-red-600 text-sm">{error}</p>}
+          <Button type="submit" fullWidth disabled={loading} size="md">
+            {loading ? <LoadingSpinner size={20} /> : "Get API Key"}
+          </Button>
         </form>
-
-        <p className="text-xs text-gray-500 mt-4 text-center">
-          Already have an account?{" "}
+        <p className="text-xs text-gray-500 mt-6 text-center">
+          Already have an account?{' '}
           <Link href="/login" className="text-blue-600 hover:underline font-medium">Log in</Link>
         </p>
-      </div>
-    </div>
+      </Card>
+    </Container>
   );
 }

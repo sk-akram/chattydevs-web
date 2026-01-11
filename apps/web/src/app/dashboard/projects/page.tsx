@@ -3,6 +3,10 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
+import { Container } from "../../components/ui/Container";
+import { Card } from "../../components/ui/Card";
+import { Button } from "../../components/ui/Button";
+import { SectionHeading } from "../../components/ui/SectionHeading";
 
 type Project = {
   id: string;
@@ -55,83 +59,52 @@ export default function ProjectsPage() {
   }, []);
 
   if (loading) {
-    return <LoadingSpinner />;
+    return (
+      <Container className="py-16 flex items-center justify-center">
+        <LoadingSpinner />
+      </Container>
+    );
   }
 
   if (error) {
-    return <div className="p-8"><p className="text-red-600">{error}</p></div>;
+    return (
+      <Container className="py-16">
+        <Card className="text-center text-red-600 font-semibold">{error}</Card>
+      </Container>
+    );
   }
 
   return (
-    <div className="max-w-2xl mx-auto py-12 px-4">
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-extrabold text-gray-900">Projects</h1>
-        <Link
-          href="/dashboard/projects/new"
-          className="btn-primary text-base"
-        >
-          New Project
-        </Link>
+    <Container className="py-12">
+      <div className="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4">
+        <SectionHeading className="mb-0">Projects</SectionHeading>
+        <Button size="md">
+          <Link href="/dashboard/projects/new">New Project</Link>
+        </Button>
       </div>
-
       {projects.length === 0 ? (
-        <div className="card text-center">
-          <p className="text-gray-500">No projects found.</p>
-        </div>
+        <Card className="text-center py-12 text-gray-500">No projects found. Create your first project!</Card>
       ) : (
-        <ul className="space-y-4">
+        <ul className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {projects.map((project) => (
-            <li key={project.id} className="card flex flex-col gap-1">
-              <Link href={`/dashboard/projects/${project.id}`} className="font-semibold text-blue-700 hover:underline text-lg">
-                {project.domain}
-              </Link>
-              <div className="text-xs text-gray-400 mt-1">
-                Created: {new Date(project.created_at).toLocaleString()}
-              </div>
+            <li key={project.id}>
+              <Card className="flex flex-col gap-2">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="font-semibold text-lg text-gray-900">{project.domain}</div>
+                    <div className="text-xs text-gray-500">ID: {project.id}</div>
+                  </div>
+                  <Button variant="secondary" size="md">
+                    <Link href={`/dashboard/projects/${project.id}`}>Open</Link>
+                  </Button>
+                </div>
+                <div className="text-xs text-gray-400 mt-2">Created: {new Date(project.created_at).toLocaleString()}</div>
+              </Card>
             </li>
           ))}
         </ul>
       )}
-    </div>
-  );
-// ...existing code...
 
-  return (
-    <div>
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-xl font-semibold">Projects</h1>
-          <p className="text-gray-600">Manage your chatbot projects</p>
-        </div>
-
-        <Link
-          href="/dashboard/projects/new"
-          className="bg-black text-white px-4 py-2 rounded text-sm"
-        >
-          + New Project
-        </Link>
-      </div>
-
-      {projects.length === 0 ? (
-        <div className="border border-dashed rounded p-10 text-center bg-white">
-          <p className="text-gray-500">No projects created yet</p>
-        </div>
-      ) : (
-        <div className="space-y-3">
-          {projects.map((project) => (
-            <Link
-              key={project.id}
-              href={`/dashboard/projects/${project.id}`}
-              className="block bg-white border rounded p-4 hover:bg-gray-50"
-            >
-              <p className="font-medium">{project.domain}</p>
-              <p className="text-xs text-gray-500">
-                ID: {project.id}
-              </p>
-            </Link>
-          ))}
-        </div>
-      )}
-    </div>
+    </Container>
   );
 }

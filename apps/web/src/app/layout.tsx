@@ -1,6 +1,8 @@
+
 import "./globals.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import { Container } from "./components/ui/Container";
 
 export default function RootLayout({
   children,
@@ -11,7 +13,9 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Navbar />
-        <main className="min-h-screen">{children}</main>
+        <Container className="min-h-screen flex flex-col justify-between">
+          {children}
+        </Container>
         <Footer />
       </body>
     </html>

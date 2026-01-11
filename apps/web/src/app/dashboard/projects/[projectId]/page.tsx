@@ -1,10 +1,16 @@
 "use client";
 
+
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import FileUpload from "@/app/components/FileUpload";
+import { Toast } from "../../../components/ui/Toast";
 import ChatBox from "@/app/components/ChatBox";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
+import { Container } from "../../../components/ui/Container";
+import { Card } from "../../../components/ui/Card";
+import { Button } from "../../../components/ui/Button";
+import { SectionHeading } from "../../../components/ui/SectionHeading";
 
 export const runtime = "edge";
 
@@ -14,6 +20,7 @@ type Project = {
   created_at: string;
 };
 
+
 export default function ProjectDetailPage() {
   const params = useParams();
   const projectId = params.projectId as string;
@@ -22,15 +29,15 @@ export default function ProjectDetailPage() {
   const [loading, setLoading] = useState(true);
   const [ingesting, setIngesting] = useState(false);
   const [result, setResult] = useState<string>("");
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showError, setShowError] = useState("");
 
   useEffect(() => {
     const apiKey = localStorage.getItem("chattydevs_api_key");
-
     if (!apiKey) {
       setLoading(false);
       return;
     }
-
     async function fetchProject() {
       try {
         const res = await fetch(
@@ -39,16 +46,13 @@ export default function ProjectDetailPage() {
             headers: {
               Authorization: `Bearer ${apiKey}`,
             },
-            cache: "no-store", // 🚨 REQUIRED FIX
+            cache: "no-store",
           }
         );
-
         const data = await res.json();
-
         if (!res.ok) {
           throw new Error(data.error || "Failed to fetch project");
         }
-
         setProject(data.project);
       } catch (err: unknown) {
         if (err instanceof Error) {
@@ -60,17 +64,20 @@ export default function ProjectDetailPage() {
         setLoading(false);
       }
     }
-
     fetchProject();
   }, [projectId]);
 
   async function handleIngest() {
+    if (ingesting) return; // Prevent double submit
     const apiKey = localStorage.getItem("chattydevs_api_key");
-    if (!apiKey || !project) return;
-
+    if (!apiKey || !project) {
+      setShowError("Missing API key or project.");
+      return;
+    }
     setIngesting(true);
     setResult("");
-
+    setShowError("");
+    setShowSuccess(false);
     try {
       const res = await fetch(
         "https://api.skakram1110.workers.dev/projects/ingest",
@@ -80,87 +87,80 @@ export default function ProjectDetailPage() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${apiKey}`,
           },
-          body: JSON.stringify({
-            project_id: project.id,
-            start_url: project.domain,
-            max_pages: 5,
-          }),
+          body: JSON.stringify({ project_id: project.id }),
         }
       );
-
       const data = await res.json();
-
       if (!res.ok) {
-        throw new Error(data.error || "Ingestion failed");
+        throw new Error(data.error || "Ingest failed");
       }
-
-      setResult(
-        `Indexed ${data.pages_crawled} pages, ${data.chunks_indexed} chunks`
-      );
+      setResult("Website ingested and indexed successfully.");
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 2000);
     } catch (err: unknown) {
       if (err instanceof Error) {
+        setShowError(err.message);
         setResult(err.message);
       } else {
-        setResult("Ingestion failed");
+        setShowError("Ingest failed");
+        setResult("Ingest failed");
       }
     } finally {
       setIngesting(false);
     }
   }
 
-  if (loading) return <LoadingSpinner />;
+  if (loading) {
+    return (
+      <Container className="py-16 flex items-center justify-center">
+        <LoadingSpinner />
+      </Container>
+    );
+  }
 
   if (!project) {
-    return <div className="p-8"><p className="text-red-600">Project not found</p></div>;
+    return (
+      <Container className="py-16">
+        <Card className="text-center text-red-600 font-semibold">{result || "Project not found."}</Card>
+      </Container>
+    );
   }
 
   return (
-    <div className="space-y-8 max-w-2xl mx-auto py-12 px-4">
-      {/* Header */}
-      <div className="mb-2">
-        <h1 className="text-3xl font-extrabold text-gray-900">
-          Project: {project.id.slice(0, 8)}
-        </h1>
-        <p className="text-gray-500">
-          Domain: <span className="font-medium text-blue-700">{project.domain}</span>
-        </p>
+    <Container className="py-10 max-w-3xl">
+      {showSuccess && (
+        <Toast message="Training finished!" type="success" onClose={() => setShowSuccess(false)} />
+      )}
+      {showError && (
+        <Toast message={showError} type="error" onClose={() => setShowError("")} />
+      )}
+      <div className="flex flex-col sm:flex-row items-center justify-between mb-8 gap-2">
+        <SectionHeading className="mb-0">Project: {project.domain}</SectionHeading>
+        <span className="text-xs text-gray-500">ID: {project.id}</span>
       </div>
-
-      {/* Training */}
-      <div className="card space-y-4">
-        <h2 className="font-semibold text-lg text-gray-900">Training</h2>
-        <FileUpload projectId={project.id} />
-        <button
-          onClick={handleIngest}
-          disabled={ingesting}
-          className="btn-primary w-full disabled:opacity-60"
-        >
-          {ingesting ? "Training..." : "Start Training"}
-        </button>
-
-        {result && (
-          <p className="text-sm text-green-700 font-medium">{result}</p>
-        )}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+        <Card>
+          <h3 className="font-semibold text-lg mb-2">Upload Files</h3>
+          <FileUpload projectId={projectId} />
+        </Card>
+        <Card>
+          <h3 className="font-semibold text-lg mb-2">Ingest Website</h3>
+          <button
+            onClick={handleIngest}
+            disabled={ingesting}
+            className="btn-primary w-full disabled:opacity-60"
+          >
+            {ingesting ? "Training..." : "Start Training"}
+          </button>
+          {result && (
+            <p className="text-sm text-green-700 font-medium mt-2">{result}</p>
+          )}
+        </Card>
       </div>
-
-      <ChatBox projectId={project.id} />
-
-      {/* Widget snippet */}
-      <div className="card">
-        <h2 className="font-semibold mb-2 text-lg text-gray-900">Embed Widget</h2>
-
-        <pre className="bg-gray-100 text-xs p-3 rounded overflow-x-auto">
-{`<script
-  src="https://cdn.chattydevs.com/widget.js"
-  data-project-id="${project.id}"
-  data-api-key="YOUR_API_KEY"
-></script>`}
-        </pre>
-
-        <p className="text-xs text-gray-500 mt-2">
-          Paste this into your website
-        </p>
-      </div>
-    </div>
+      <Card className="mb-10">
+        <h3 className="font-semibold text-lg mb-2">Chat with your data</h3>
+        <ChatBox projectId={projectId} />
+      </Card>
+    </Container>
   );
 }
