@@ -1,6 +1,5 @@
 "use client";
 
-
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -39,14 +38,14 @@ export default function LoginPage() {
   }
 
   return (
-    <Container className="flex items-center justify-center min-h-screen py-12">
+    <Container className="flex items-center justify-center min-h-screen py-16">
       {showError && (
         <Toast message={showError} type="error" onClose={() => setShowError("")} />
       )}
-      <Card className="w-full max-w-md mx-auto">
-        <SectionHeading className="text-center mb-2">Welcome back</SectionHeading>
-        <p className="text-sm text-gray-500 mb-8 text-center">Log in to your ChattyDevs account</p>
-        <form onSubmit={handleLogin} className="space-y-5">
+      <Card className="w-full max-w-sm mx-auto">
+        <SectionHeading className="text-center mb-4">Welcome back</SectionHeading>
+        <p className="text-sm text-gray-400 mb-10 text-center">Log in to your ChattyDevs account</p>
+        <form onSubmit={handleLogin} className="space-y-6">
           <Input
             type="email"
             placeholder="Email"
@@ -69,9 +68,9 @@ export default function LoginPage() {
             {loading ? "Logging in..." : "Log in"}
           </Button>
         </form>
-        <p className="text-xs text-gray-500 mt-6 text-center">
+        <p className="text-xs text-gray-400 mt-8 text-center">
           Don&apos;t have an account?{' '}
-          <Link href="/signup" className="text-blue-600 hover:underline font-medium">Sign up</Link>
+          <Link href="/signup" className="text-indigo-500 hover:underline font-medium">Sign up</Link>
         </p>
       </Card>
     </Container>

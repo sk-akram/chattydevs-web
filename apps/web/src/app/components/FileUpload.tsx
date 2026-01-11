@@ -1,6 +1,5 @@
 "use client";
 
-
 import { useState } from "react";
 import { Toast } from "./ui/Toast";
 
@@ -78,26 +77,26 @@ export default function FileUpload({ projectId }: Props) {
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 space-y-3 shadow-md">
+    <div className="bg-gray-900 border border-gray-700 rounded-xl p-6 space-y-4 shadow-lg">
       {showSuccess && (
         <Toast message="Upload complete!" type="success" onClose={() => setShowSuccess(false)} />
       )}
       {showError && (
         <Toast message={showError} type="error" onClose={() => setShowError("")} />
       )}
-      <h2 className="font-semibold text-lg text-gray-900 dark:text-white">Upload documents</h2>
+      <h2 className="font-semibold text-lg text-white">Upload documents</h2>
 
       <input
         type="file"
         accept=".pdf,.txt,.csv"
         onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-        className="text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 transition-colors duration-150"
+        className="text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-gray-800 file:text-gray-300 hover:file:bg-gray-700 transition-colors duration-150"
       />
 
       <button
         onClick={handleUpload}
         disabled={!file || uploading}
-        className="bg-black hover:bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
+        className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-indigo-500"
       >
         {uploading ? "Uploading..." : "Upload File"}
       </button>
@@ -105,8 +104,8 @@ export default function FileUpload({ projectId }: Props) {
       {message && (
         <p className={
           message.toLowerCase().includes("upload") || message.toLowerCase().includes("indexed")
-            ? "text-sm text-green-600 dark:text-green-400"
-            : "text-sm text-red-600 dark:text-red-400"
+            ? "text-sm text-green-500"
+            : "text-sm text-red-500"
         }>
           {message}
         </p>

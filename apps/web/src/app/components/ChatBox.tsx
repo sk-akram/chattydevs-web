@@ -87,14 +87,14 @@ export default function ChatBox({ projectId }: Props) {
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 flex flex-col h-[420px] shadow-md">
+    <div className="bg-gray-900 border border-gray-700 rounded-xl p-5 flex flex-col h-[420px] shadow-lg">
       {showError && (
         <Toast message={showError} type="error" onClose={() => setShowError("")} />
       )}
-      <h2 className="font-semibold mb-2 text-lg text-gray-900 dark:text-white">Test your chatbot</h2>
+      <h2 className="font-semibold mb-3 text-lg text-white">Test your chatbot</h2>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto space-y-3 text-sm mb-3 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700">
+      <div className="flex-1 overflow-y-auto space-y-3 text-sm mb-4 scrollbar-thin scrollbar-thumb-gray-600">
         {messages.length === 0 && !sending && (
           <p className="text-gray-400">Ask something about your data…</p>
         )}
@@ -105,18 +105,18 @@ export default function ChatBox({ projectId }: Props) {
       </div>
 
       {/* Input */}
-      <div className="flex gap-2">
+      <div className="flex gap-3">
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && sendMessage()}
           placeholder="Ask a question..."
-          className="flex-1 border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+          className="flex-1 border border-gray-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-gray-800 text-white"
         />
         <button
           onClick={sendMessage}
           disabled={sending || !input.trim()}
-          className="bg-black hover:bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
+          className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150 disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-indigo-500"
         >
           Send
         </button>

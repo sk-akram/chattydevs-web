@@ -1,21 +1,19 @@
-
 @import "tailwindcss";
 
-
 :root {
-  --background: #f5f7fa;
-  --foreground: #1a202c;
-  --primary: #2563eb;
-  --primary-hover: #1d4ed8;
-  --primary-light: #e0e7ff;
-  --secondary: #6366f1;
+  --background: #0f172a;
+  --foreground: #f3f4f6;
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --primary-light: #c7d2fe;
+  --secondary: #818cf8;
   --accent: #fbbf24;
   --success: #22c55e;
   --danger: #ef4444;
-  --border-radius: 0.75rem;
-  --card-bg: #fff;
-  --card-bg-dark: #1e293b;
-  --shadow: 0 4px 24px 0 rgba(30,41,59,0.08);
+  --border-radius: 1rem;
+  --card-bg: #1e293b;
+  --card-bg-dark: #111827;
+  --shadow: 0 4px 24px 0 rgba(0,0,0,0.1);
   --spacing: 1rem;
   --font-sans: 'Inter', 'Segoe UI', Arial, sans-serif;
 }
@@ -29,11 +27,10 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0f172a;
+    --foreground: #f3f4f6;
     --card-bg: #1e293b;
   }
-
 }
 
 body {
@@ -44,21 +41,19 @@ body {
   transition: background 0.2s, color 0.2s;
 }
 
-
 .card {
   background: var(--card-bg);
-  border-radius: 1.25rem;
-  box-shadow: 0 6px 32px 0 rgba(30,41,59,0.10);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
   padding: 2.5rem 2rem;
   border: 1px solid #e5e7eb;
   transition: box-shadow 0.18s, border 0.18s;
 }
 
-
 .btn-primary {
   background: var(--primary);
   color: #fff;
-  border-radius: 0.75rem;
+  border-radius: var(--border-radius);
   font-weight: 700;
   font-size: 1.125rem;
   padding: 0.85rem 2.25rem;
@@ -70,11 +65,10 @@ body {
   box-shadow: 0 4px 16px 0 rgba(37,99,235,0.12);
 }
 
-
 .btn-secondary {
   background: var(--primary-light);
   color: var(--primary);
-  border-radius: 0.75rem;
+  border-radius: var(--border-radius);
   font-weight: 700;
   font-size: 1.125rem;
   padding: 0.85rem 2.25rem;
@@ -87,7 +81,7 @@ body {
 }
 
 input, textarea, select {
-  border-radius: 0.75rem;
+  border-radius: var(--border-radius);
   border: 1.5px solid #e5e7eb;
   padding: 1rem 1.25rem;
   font-size: 1.08rem;

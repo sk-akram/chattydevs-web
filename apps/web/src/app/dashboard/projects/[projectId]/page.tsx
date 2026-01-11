@@ -1,6 +1,5 @@
 "use client";
 
-
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import FileUpload from "@/app/components/FileUpload";
@@ -19,7 +18,6 @@ type Project = {
   domain: string;
   created_at: string;
 };
-
 
 export default function ProjectDetailPage() {
   const params = useParams();
@@ -127,24 +125,24 @@ export default function ProjectDetailPage() {
   }
 
   return (
-    <Container className="py-10 max-w-3xl">
+    <Container className="py-12 max-w-4xl">
       {showSuccess && (
         <Toast message="Training finished!" type="success" onClose={() => setShowSuccess(false)} />
       )}
       {showError && (
         <Toast message={showError} type="error" onClose={() => setShowError("")} />
       )}
-      <div className="flex flex-col sm:flex-row items-center justify-between mb-8 gap-2">
+      <div className="flex flex-col sm:flex-row items-center justify-between mb-10 gap-4">
         <SectionHeading className="mb-0">Project: {project.domain}</SectionHeading>
-        <span className="text-xs text-gray-500">ID: {project.id}</span>
+        <span className="text-xs text-gray-400">ID: {project.id}</span>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-12">
         <Card>
-          <h3 className="font-semibold text-lg mb-2">Upload Files</h3>
+          <h3 className="font-semibold text-lg text-white mb-3">Upload Files</h3>
           <FileUpload projectId={projectId} />
         </Card>
         <Card>
-          <h3 className="font-semibold text-lg mb-2">Ingest Website</h3>
+          <h3 className="font-semibold text-lg text-white mb-3">Ingest Website</h3>
           <button
             onClick={handleIngest}
             disabled={ingesting}
@@ -153,12 +151,12 @@ export default function ProjectDetailPage() {
             {ingesting ? "Training..." : "Start Training"}
           </button>
           {result && (
-            <p className="text-sm text-green-700 font-medium mt-2">{result}</p>
+            <p className="text-sm text-green-500 font-medium mt-3">{result}</p>
           )}
         </Card>
       </div>
-      <Card className="mb-10">
-        <h3 className="font-semibold text-lg mb-2">Chat with your data</h3>
+      <Card className="mb-12">
+        <h3 className="font-semibold text-lg text-white mb-3">Chat with your data</h3>
         <ChatBox projectId={projectId} />
       </Card>
     </Container>
