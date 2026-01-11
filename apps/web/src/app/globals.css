@@ -44,44 +44,56 @@ body {
   transition: background 0.2s, color 0.2s;
 }
 
+
 .card {
   background: var(--card-bg);
-  border-radius: var(--border-radius);
-  box-shadow: var(--shadow);
-  padding: 2rem;
+  border-radius: 1.25rem;
+  box-shadow: 0 6px 32px 0 rgba(30,41,59,0.10);
+  padding: 2.5rem 2rem;
+  border: 1px solid #e5e7eb;
+  transition: box-shadow 0.18s, border 0.18s;
 }
+
 
 .btn-primary {
   background: var(--primary);
   color: #fff;
-  border-radius: 0.5rem;
-  font-weight: 600;
-  padding: 0.75rem 2rem;
-  transition: background 0.15s;
+  border-radius: 0.75rem;
+  font-weight: 700;
+  font-size: 1.125rem;
+  padding: 0.85rem 2.25rem;
+  box-shadow: 0 2px 8px 0 rgba(37,99,235,0.08);
+  transition: background 0.15s, box-shadow 0.15s;
 }
 .btn-primary:hover, .btn-primary:focus {
   background: var(--primary-hover);
+  box-shadow: 0 4px 16px 0 rgba(37,99,235,0.12);
 }
+
 
 .btn-secondary {
   background: var(--primary-light);
   color: var(--primary);
-  border-radius: 0.5rem;
-  font-weight: 600;
-  padding: 0.75rem 2rem;
-  transition: background 0.15s;
+  border-radius: 0.75rem;
+  font-weight: 700;
+  font-size: 1.125rem;
+  padding: 0.85rem 2.25rem;
+  box-shadow: 0 2px 8px 0 rgba(37,99,235,0.04);
+  transition: background 0.15s, box-shadow 0.15s;
 }
 .btn-secondary:hover, .btn-secondary:focus {
   background: #dbeafe;
+  box-shadow: 0 4px 16px 0 rgba(37,99,235,0.08);
 }
 
 input, textarea, select {
-  border-radius: 0.5rem;
-  border: 1px solid #e5e7eb;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
+  border-radius: 0.75rem;
+  border: 1.5px solid #e5e7eb;
+  padding: 1rem 1.25rem;
+  font-size: 1.08rem;
   background: #fff;
-  transition: border 0.15s;
+  font-weight: 500;
+  transition: border 0.15s, box-shadow 0.15s;
 }
 
 input:focus, textarea:focus, select:focus {
