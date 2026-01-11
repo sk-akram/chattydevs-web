@@ -2,77 +2,94 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { Container } from "../components/ui/Container";
-import { Card } from "../components/ui/Card";
-import { Button } from "../components/ui/Button";
-import { Input } from "../components/ui/Input";
+import { useEffect, useState } from "react";
 
-import { SectionHeading } from "../components/ui/SectionHeading";
-import { Toast } from "../components/ui/Toast";
+import { Button, Card, Container, Input } from "../components/ui";
+import { api } from "../lib/api";
 
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [showError, setShowError] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
-  function handleLogin(e: React.FormEvent) {
+  useEffect(() => {
+    if (localStorage.getItem("chattydevs_api_key")) router.push("/dashboard");
+  }, [router]);
+
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (loading) return; // Prevent double submit
-    // TODO: Implement real login logic if backend supports it
-    if (!email || !password) {
-      setShowError("Please enter your email and password.");
-      setError("Please enter your email and password.");
-      return;
-    }
-    setError("");
-    setShowError("");
+    if (!email) return;
+
     setLoading(true);
-    setTimeout(() => {
+    setError(null);
+
+    try {
+      const response = await api.signup(email);
+      localStorage.setItem("chattydevs_api_key", response.api_key);
+      localStorage.setItem("chattydevs_email", email);
+      router.push("/dashboard");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An error occurred during authentication");
+    } finally {
       setLoading(false);
-      router.push("/dashboard/projects");
-    }, 800);
+    }
   }
 
   return (
-    <Container className="flex items-center justify-center min-h-screen py-16">
-      {showError && (
-        <Toast message={showError} type="error" onClose={() => setShowError("")} />
-      )}
-      <Card className="w-full max-w-sm mx-auto">
-        <SectionHeading className="text-center mb-4">Welcome back</SectionHeading>
-        <p className="text-sm text-gray-400 mb-10 text-center">Log in to your ChattyDevs account</p>
-        <form onSubmit={handleLogin} className="space-y-6">
-          <Input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            label="Email address"
-            error={error}
-          />
-          <Input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            label="Password"
-            error={error}
-          />
-          <Button type="submit" fullWidth size="md" disabled={loading}>
-            {loading ? "Logging in..." : "Log in"}
-          </Button>
-        </form>
-        <p className="text-xs text-gray-400 mt-8 text-center">
-          Don&apos;t have an account?{' '}
-          <Link href="/signup" className="text-indigo-500 hover:underline font-medium">Sign up</Link>
+    <div className="min-h-screen flex items-center justify-center py-12 px-4 bg-slate-950">
+      <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-indigo-600/10 to-transparent -z-10" />
+
+      <Container className="max-w-md">
+        <div className="text-center mb-10">
+          <Link href="/" className="inline-flex items-center gap-2 mb-8">
+            <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-indigo-500/20">
+              C
+            </div>
+            <span className="font-bold text-2xl">ChattyDevs</span>
+          </Link>
+          <h1 className="text-3xl font-bold text-white mb-2">Welcome back</h1>
+          <p className="text-slate-400">Enter your email to continue.</p>
+        </div>
+
+        <Card className="p-8 shadow-2xl bg-slate-900/80">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+            <Input
+              label="Email Address"
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              disabled={loading}
+              autoFocus
+            />
+
+            {error ? (
+              <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-sm text-red-400">
+                {error}
+              </div>
+            ) : null}
+
+            <Button size="lg" type="submit" isLoading={loading} className="w-full">
+              Continue
+            </Button>
+          </form>
+
+          <div className="mt-8 pt-8 border-t border-slate-800 text-center text-sm text-slate-500">
+            <p>
+              Don&apos;t have an account?{" "}
+              <Link href="/signup" className="text-indigo-400 hover:text-indigo-300 font-medium">
+                Sign up
+              </Link>
+            </p>
+          </div>
+        </Card>
+
+        <p className="mt-10 text-center text-xs text-slate-600">
+          By continuing, you agree to our Terms of Service and Privacy Policy.
         </p>
-      </Card>
-    </Container>
+      </Container>
+    </div>
   );
 }

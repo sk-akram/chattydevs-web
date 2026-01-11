@@ -1,89 +1,95 @@
 "use client";
 
-
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import LoadingSpinner from "@/app/components/LoadingSpinner";
-import { Container } from "../components/ui/Container";
-import { Card } from "../components/ui/Card";
-import { Button } from "../components/ui/Button";
-import { Input } from "../components/ui/Input";
+import { useEffect, useState } from "react";
 
-import { SectionHeading } from "../components/ui/SectionHeading";
-import { Toast } from "../components/ui/Toast";
-
+import { Button, Card, Container, Input } from "../components/ui";
+import { api } from "../lib/api";
 
 export default function SignupPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [showSuccess, setShowSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  async function handleSignup(e: React.FormEvent) {
+  useEffect(() => {
+    if (localStorage.getItem("chattydevs_api_key")) router.push("/dashboard");
+  }, [router]);
+
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (loading) return; // Prevent double submit
-    setError("");
-    setShowSuccess(false);
+    if (!email) return;
+
     setLoading(true);
+    setError(null);
+
     try {
-      const res = await fetch(
-        "https://api.skakram1110.workers.dev/users",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email }),
-        }
-      );
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || "Signup failed");
-      }
-      localStorage.setItem("chattydevs_api_key", data.api_key);
-      setShowSuccess(true);
-      setTimeout(() => {
-        setShowSuccess(false);
-        router.push("/dashboard/projects");
-      }, 1200);
-    } catch (err: unknown) {
-      if (err instanceof Error) setError(err.message);
-      else setError("Signup failed");
+      const response = await api.signup(email);
+      localStorage.setItem("chattydevs_api_key", response.api_key);
+      localStorage.setItem("chattydevs_email", email);
+      router.push("/dashboard");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An error occurred during authentication");
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <Container className="flex items-center justify-center min-h-screen py-12">
-      {showSuccess && (
-        <Toast message="Project created!" type="success" onClose={() => setShowSuccess(false)} />
-      )}
-      {error && (
-        <Toast message={error} type="error" onClose={() => setError("")} />
-      )}
-      <Card className="w-full max-w-md mx-auto">
-        <SectionHeading className="text-center mb-2">Create your account</SectionHeading>
-        <p className="text-sm text-gray-500 mb-8 text-center">Start building your AI chatbot</p>
-        <form onSubmit={handleSignup} className="space-y-5">
-          <Input
-            type="email"
-            placeholder="Email address"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            label="Email address"
-            error={error}
-          />
-          <Button type="submit" fullWidth disabled={loading} size="md">
-            {loading ? <LoadingSpinner size={20} /> : "Get API Key"}
-          </Button>
-        </form>
-        <p className="text-xs text-gray-500 mt-6 text-center">
-          Already have an account?{' '}
-          <Link href="/login" className="text-blue-600 hover:underline font-medium">Log in</Link>
+    <div className="min-h-screen flex items-center justify-center py-12 px-4 bg-slate-950">
+      <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-indigo-600/10 to-transparent -z-10" />
+
+      <Container className="max-w-md">
+        <div className="text-center mb-10">
+          <Link href="/" className="inline-flex items-center gap-2 mb-8">
+            <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-indigo-500/20">
+              C
+            </div>
+            <span className="font-bold text-2xl">ChattyDevs</span>
+          </Link>
+          <h1 className="text-3xl font-bold text-white mb-2">Create your account</h1>
+          <p className="text-slate-400">Enter your email to get started with your first bot.</p>
+        </div>
+
+        <Card className="p-8 shadow-2xl bg-slate-900/80">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+            <Input
+              label="Email Address"
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              disabled={loading}
+              autoFocus
+            />
+
+            {error ? (
+              <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-sm text-red-400">
+                {error}
+              </div>
+            ) : null}
+
+            <Button size="lg" type="submit" isLoading={loading} className="w-full">
+              Sign Up
+            </Button>
+          </form>
+
+          <div className="mt-8 pt-8 border-t border-slate-800 text-center text-sm text-slate-500">
+            <p>
+              Already have an account?{" "}
+              <Link href="/login" className="text-indigo-400 hover:text-indigo-300 font-medium">
+                Log in
+              </Link>
+            </p>
+          </div>
+        </Card>
+
+        <p className="mt-10 text-center text-xs text-slate-600">
+          By continuing, you agree to our Terms of Service and Privacy Policy.
         </p>
-      </Card>
-    </Container>
+      </Container>
+    </div>
   );
 }

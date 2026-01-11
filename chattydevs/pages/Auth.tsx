@@ -1,0 +1,93 @@
+
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { Button, Input, Container, Card } from '../components/UI';
+import { api } from '../api';
+
+export const Auth: React.FC<{ type: 'login' | 'signup' }> = ({ type }) => {
+  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (localStorage.getItem('chattydevs_api_key')) {
+      navigate('/dashboard');
+    }
+  }, [navigate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email) return;
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await api.signup(email);
+      localStorage.setItem('chattydevs_api_key', response.api_key);
+      localStorage.setItem('chattydevs_email', email);
+      navigate('/dashboard');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred during authentication');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center py-12 px-4 bg-slate-950">
+      <div className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-indigo-600/10 to-transparent -z-10"></div>
+      
+      <Container className="max-w-md">
+        <div className="text-center mb-10">
+          <Link to="/" className="inline-flex items-center gap-2 mb-8">
+            <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-indigo-500/20">C</div>
+            <span className="font-bold text-2xl">ChattyDevs</span>
+          </Link>
+          <h1 className="text-3xl font-bold text-white mb-2">
+            {type === 'signup' ? 'Create your account' : 'Welcome back'}
+          </h1>
+          <p className="text-slate-400">
+            Enter your email to get started with your first bot.
+          </p>
+        </div>
+
+        <Card className="p-8 shadow-2xl bg-slate-900/80">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+            <Input 
+              label="Email Address"
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              disabled={loading}
+              autoFocus
+            />
+            {error && (
+              <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-sm text-red-400">
+                {error}
+              </div>
+            )}
+            <Button size="lg" type="submit" isLoading={loading} className="w-full">
+              {type === 'signup' ? 'Sign Up' : 'Continue'}
+            </Button>
+          </form>
+
+          <div className="mt-8 pt-8 border-t border-slate-800 text-center text-sm text-slate-500">
+            {type === 'signup' ? (
+              <p>Already have an account? <Link to="/login" className="text-indigo-400 hover:text-indigo-300 font-medium">Log in</Link></p>
+            ) : (
+              <p>Don't have an account? <Link to="/signup" className="text-indigo-400 hover:text-indigo-300 font-medium">Sign up</Link></p>
+            )}
+          </div>
+        </Card>
+        
+        <p className="mt-10 text-center text-xs text-slate-600">
+          By continuing, you agree to our Terms of Service and Privacy Policy.
+        </p>
+      </Container>
+    </div>
+  );
+};

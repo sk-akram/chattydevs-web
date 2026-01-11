@@ -1,55 +1,109 @@
-import Link from "next/link";
-import { Button } from "./components/ui/Button";
-import { Card } from "./components/ui/Card";
-import { Container } from "./components/ui/Container";
-import { SectionHeading } from "./components/ui/SectionHeading";
+"use client";
+
+import { useRouter } from "next/navigation";
+
+import { Navbar } from "./components/layout";
+import { Button, Card, Container } from "./components/ui";
 
 export default function HomePage() {
+  const router = useRouter();
+
   return (
-    <Container className="flex flex-col items-center justify-center py-40 text-center">
-      <h1 className="max-w-3xl text-7xl md:text-8xl font-extrabold leading-tight tracking-tight text-white mb-8">
-        AI Chatbot for Your Website
-        <span className="block text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-blue-500 mt-4">
-          Trained on Your Content
-        </span>
-      </h1>
+    <div className="min-h-screen bg-slate-950">
+      <Navbar />
 
-      <p className="mt-8 max-w-2xl text-2xl text-gray-300">
-        ChattyDevs lets you add an AI-powered chatbot to your website using your own docs, FAQs, or knowledge base. No hallucinations. No setup pain.
-      </p>
+      <section className="relative pt-32 pb-40 overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-6xl h-[600px] bg-indigo-500/10 blur-[160px] rounded-full -z-10 opacity-60" />
+        <div className="absolute top-[20%] right-[10%] w-64 h-64 bg-purple-500/5 blur-[120px] rounded-full -z-10 animate-pulse" />
 
-      <div className="mt-16 flex flex-col gap-8 sm:flex-row">
-        <Button size="lg">
-          <Link href="/signup">Get API Key</Link>
-        </Button>
-        <Button variant="secondary" size="lg">
-          <Link href="/docs">View Docs</Link>
-        </Button>
-      </div>
+        <Container className="text-center">
+          <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-slate-800 bg-slate-900/50 backdrop-blur-sm text-indigo-400 text-xs font-bold uppercase tracking-widest mb-10 shadow-2xl">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500" />
+            </span>
+            Platform Updates: v2.0 Now Available
+          </div>
 
-      <div className="mt-28 grid max-w-3xl grid-cols-1 gap-12 sm:grid-cols-3 text-left w-full">
-        <Feature
-          title="Your Data Only"
-          description="Train the chatbot on your own website content, PDFs, or docs."
-        />
-        <Feature
-          title="Easy Integration"
-          description="Drop-in widget or API. Works with any frontend."
-        />
-        <Feature
-          title="Developer Friendly"
-          description="Clear APIs, predictable behavior, no magic black box."
-        />
-      </div>
-    </Container>
-  );
-}
+          <h1 className="text-6xl md:text-8xl font-black tracking-tight mb-10 leading-[0.9] text-white">
+            Automate Support <br />
+            <span className="gradient-text">With Custom AI</span>
+          </h1>
 
-function Feature({ title, description }: { title: string; description: string }) {
-  return (
-    <Card className="text-center">
-      <h3 className="text-lg font-semibold text-gray-900 mb-1">{title}</h3>
-      <p className="text-gray-500">{description}</p>
-    </Card>
+          <p className="text-xl text-slate-400 max-w-2xl mx-auto mb-14 leading-relaxed">
+            Transform your knowledge base into an intelligent chatbot in seconds. Ingest PDFs, crawl sites,
+            and deploy custom models trained on your specific data.
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-5">
+            <Button size="lg" onClick={() => router.push("/signup")} className="h-14 px-10 text-lg">
+              Launch Your Bot
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              onClick={() => router.push("/docs")}
+              className="h-14 px-10 text-lg"
+            >
+              Explore Enterprise Docs
+            </Button>
+          </div>
+
+          <div className="mt-28 relative max-w-5xl mx-auto group">
+            <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-[2rem] blur opacity-10 group-hover:opacity-30 transition duration-1000" />
+            <div className="relative glass rounded-[2rem] p-4 border-slate-800 shadow-3xl overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent z-10 pointer-events-none" />
+              <div className="rounded-[1.5rem] w-full h-[420px] bg-slate-900/40 border border-slate-800/60" />
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      <section className="py-32 bg-slate-950 relative">
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none" />
+        <Container>
+          <div className="text-center mb-24">
+            <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-6">
+              Built for scale. Designed for speed.
+            </h2>
+            <p className="text-slate-500 text-lg max-w-2xl mx-auto">
+              Everything you need to build, train, and deploy production-grade chatbots globally.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-10">
+            {[
+              {
+                title: "Instant Ingestion",
+                desc: "Upload documentation, internal wikis, or raw data files. We process and vectorize everything for sub-second retrieval.",
+              },
+              {
+                title: "Neural Crawling",
+                desc: "Our crawler understands context and focuses on the content that matters to your users.",
+              },
+              {
+                title: "Seamless SDK",
+                desc: "A drop-in widget for WordPress or any site. Get your Project ID + API key and go live.",
+              },
+            ].map((f) => (
+              <Card key={f.title} className="group p-10 hover:-translate-y-2 duration-500">
+                <h3 className="text-2xl font-bold text-white mb-4">{f.title}</h3>
+                <p className="text-slate-500 leading-relaxed">{f.desc}</p>
+              </Card>
+            ))}
+          </div>
+        </Container>
+      </section>
+
+      <footer className="py-20 border-t border-slate-900">
+        <Container className="flex items-center justify-between text-slate-600 text-[10px] font-bold uppercase tracking-widest">
+          <span>© 2026 ChattyDevs Inc.</span>
+          <div className="flex gap-8">
+            <a href="#">Security</a>
+            <a href="#">Compliance</a>
+          </div>
+        </Container>
+      </footer>
+    </div>
   );
 }

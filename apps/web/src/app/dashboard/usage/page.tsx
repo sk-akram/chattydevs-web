@@ -2,15 +2,15 @@
 
 import { Card, Section } from "../../components/ui";
 
-export default function SettingsPage() {
+export default function UsagePage() {
   return (
     <Section
-      title="Workspace Settings"
+      title="Analytics & Usage"
       description="This feature is currently under active development."
     >
       <Card className="p-8">
         <p className="text-slate-500 text-sm">
-          Workspace settings (team, domains, keys) will be configurable here.
+          Usage analytics will appear here once billing and metering dashboards are enabled.
         </p>
       </Card>
     </Section>

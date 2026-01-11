@@ -1,22 +1,19 @@
+import type { Metadata } from "next";
 
 import "./globals.css";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
-import { Container } from "./components/ui/Container";
+
+export const metadata: Metadata = {
+  title: "ChattyDevs",
+  description: "Train a website chatbot on your own content.",
+};
 
 export default function RootLayout({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body>
-        <Navbar />
-        <Container className="min-h-screen flex flex-col justify-between">
-          {children}
-        </Container>
-        <Footer />
+      <body className="min-h-screen bg-slate-950 text-slate-200 antialiased selection:bg-indigo-500 selection:text-white">
+        {children}
       </body>
     </html>
   );

@@ -3,97 +3,76 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-import LoadingSpinner from "@/app/components/LoadingSpinner";
-import { Toast } from "@/app/components/ui/Toast";
+import { api } from "../../../lib/api";
+import { Button, Card, Input, Section } from "../../../components/ui";
 
 export default function NewProjectPage() {
   const router = useRouter();
-  const [url, setUrl] = useState("");
+  const [domain, setDomain] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [showSuccess, setShowSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  async function handleCreate() {
-    if (loading) return; // Prevent double submit
-    const apiKey = localStorage.getItem("chattydevs_api_key");
-
-    if (!apiKey) {
-      setError("Missing API key. Please sign up again.");
-      return;
-    }
-
-    if (!url) {
-      setError("Website URL is required");
-      return;
-    }
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!domain) return;
 
     setLoading(true);
-    setError("");
-    setShowSuccess(false);
+    setError(null);
 
     try {
-      const res = await fetch("https://api.skakram1110.workers.dev/projects", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey}`,
-        },
-        body: JSON.stringify({
-          domain: url,
-        }),
-      });
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "Failed to create project");
-      }
-
-      setShowSuccess(true);
-      setTimeout(() => {
-        setShowSuccess(false);
-        router.push(`/dashboard/projects/${data.project_id}`);
-      }, 1200);
+      const response = await api.createProject(domain);
+      const projectId = response.project_id || response.id;
+      if (!projectId) throw new Error("Project created but no id returned");
+      router.push(`/dashboard/projects/${projectId}`);
     } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("Failed to create project");
-      }
+      setError(err instanceof Error ? err.message : "Failed to create project");
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <div className="max-w-lg mx-auto py-12 px-4">
-      {showSuccess && (
-        <Toast message="Project created!" type="success" onClose={() => setShowSuccess(false)} />
-      )}
-      {error && (
-        <Toast message={error} type="error" onClose={() => setError("")} />
-      )}
-      <h1 className="text-3xl font-extrabold mb-6 text-gray-900">New Project</h1>
-      <div className="card">
-        <label className="block mb-4">
-          <span className="text-gray-700 font-medium">Website URL</span>
-          <input
-            type="url"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            className="mt-1 block w-full"
-            placeholder="https://example.com"
-            required
-          />
-        </label>
-
-        <button
-          onClick={handleCreate}
-          disabled={loading}
-          className="btn-primary w-full disabled:opacity-60"
-        >
-          {loading ? <LoadingSpinner /> : "Create Project"}
-        </button>
+    <Section
+      title="Create New Project"
+      description="Start by defining the primary domain for your chatbot. You can add more data sources later."
+    >
+      <div className="max-w-2xl mx-auto">
+        <Card className="p-8 shadow-xl bg-slate-900/60">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+            <Input
+              label="Domain or Application Name"
+              placeholder="e.g., https://my-docs.com"
+              value={domain}
+              onChange={(e) => setDomain(e.target.value)}
+              required
+              error={error || undefined}
+              disabled={loading}
+              autoFocus
+            />
+            <div className="p-4 bg-indigo-500/5 border border-indigo-500/10 rounded-lg text-sm text-slate-400 flex gap-3">
+              <svg className="w-6 h-6 text-indigo-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <p>
+                This will be the default identifier for your bot. Use a domain to enable the website crawler effectively.
+              </p>
+            </div>
+            <div className="flex items-center gap-3 pt-4">
+              <Button variant="ghost" type="button" onClick={() => router.push("/dashboard/projects") } className="flex-1">
+                Cancel
+              </Button>
+              <Button type="submit" isLoading={loading} className="flex-[2]">
+                Create Project
+              </Button>
+            </div>
+          </form>
+        </Card>
       </div>
-    </div>
+    </Section>
   );
 }
