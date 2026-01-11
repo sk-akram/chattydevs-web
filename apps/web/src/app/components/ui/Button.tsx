@@ -1,14 +1,18 @@
 import React from "react";
 import clsx from "clsx";
 
-
+/**
+ * Button component props
+ */
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary" | "ghost" | "danger";
   size?: "md" | "lg";
   fullWidth?: boolean;
 }
 
-
+/**
+ * Button component
+ */
 export const Button: React.FC<ButtonProps> = ({
   variant = "primary",
   size = "md",
@@ -22,13 +26,13 @@ export const Button: React.FC<ButtonProps> = ({
       className={clsx(
         "font-semibold rounded-xl transition focus:outline-none focus:ring-2 focus:ring-offset-2",
         variant === "primary" &&
-          "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500",
+          "bg-gradient-to-r from-indigo-600 to-blue-500 text-white hover:from-indigo-500 hover:to-blue-400 focus:ring-indigo-400",
         variant === "secondary" &&
-          "bg-blue-50 text-blue-700 hover:bg-blue-100 focus:ring-blue-300 border border-blue-200",
+          "bg-gradient-to-r from-blue-50 to-indigo-50 text-blue-700 hover:from-blue-100 hover:to-indigo-100 focus:ring-indigo-200 border border-indigo-100",
         variant === "ghost" &&
-          "bg-transparent text-blue-700 hover:bg-blue-50 focus:ring-blue-300",
+          "bg-transparent text-indigo-600 hover:bg-indigo-50 focus:ring-indigo-300",
         variant === "danger" &&
-          "bg-red-600 text-white hover:bg-red-700 focus:ring-red-500",
+          "bg-red-600 text-white hover:bg-red-500 focus:ring-red-400",
         size === "md" && "px-5 py-2 text-base",
         size === "lg" && "px-6 py-3 text-lg",
         fullWidth && "w-full",

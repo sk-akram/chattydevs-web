@@ -9,7 +9,7 @@ export interface SectionHeadingProps extends React.HTMLAttributes<HTMLHeadingEle
 export const SectionHeading: React.FC<SectionHeadingProps> = ({ children, className, ...props }) => (
   <h2
     className={clsx(
-      "text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4 tracking-tight",
+      "text-3xl md:text-4xl font-extrabold text-white mb-6 tracking-tight",
       className
     )}
     {...props}

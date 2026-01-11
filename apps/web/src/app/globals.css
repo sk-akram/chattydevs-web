@@ -1,21 +1,23 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0f172a;
-  --foreground: #f3f4f6;
-  --primary: #4f46e5;
-  --primary-hover: #4338ca;
-  --primary-light: #c7d2fe;
-  --secondary: #818cf8;
-  --accent: #fbbf24;
-  --success: #22c55e;
-  --danger: #ef4444;
-  --border-radius: 1rem;
-  --card-bg: #1e293b;
-  --card-bg-dark: #111827;
-  --shadow: 0 4px 24px 0 rgba(0,0,0,0.1);
-  --spacing: 1rem;
-  --font-sans: 'Inter', 'Segoe UI', Arial, sans-serif;
+  --background: #0f172a; /* Dark dashboard background */
+  --foreground: #e5e7eb; /* Light text color for contrast */
+  --primary: #6366f1; /* Indigo tone for primary actions */
+  --primary-hover: #4f46e5; /* Darker indigo for hover */
+  --primary-light: #c7d2fe; /* Light indigo for secondary actions */
+  --secondary: #818cf8; /* Secondary color */
+  --accent: #fbbf24; /* Accent color for highlights */
+  --success: #22c55e; /* Success color for positive actions */
+  --danger: #ef4444; /* Danger color for negative actions */
+  --border-radius: 0.75rem; /* Rounded corners for elements */
+  --card-bg: #1e293b; /* Card background color */
+  --card-bg-dark: #111827; /* Slightly lighter than background */
+  --shadow: 0 4px 24px 0 rgba(0,0,0,0.1); /* Soft shadow for depth */
+  --spacing: 1rem; /* Base spacing unit */
+  --font-sans: 'Inter', 'Segoe UI', Arial, sans-serif; /* Sans-serif font family */
+  --font-heading: 'Poppins', sans-serif; /* Heading font family */
+  --transition: all 0.3s ease-in-out; /* Smooth transitions */
 }
 
 @theme inline {
@@ -28,7 +30,7 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0f172a;
-    --foreground: #f3f4f6;
+    --foreground: #e5e7eb;
     --card-bg: #1e293b;
   }
 }

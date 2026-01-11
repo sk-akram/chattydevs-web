@@ -6,19 +6,19 @@ import { SectionHeading } from "./components/ui/SectionHeading";
 
 export default function HomePage() {
   return (
-    <Container className="flex flex-col items-center justify-center py-32 text-center">
-      <h1 className="max-w-3xl text-6xl md:text-7xl font-extrabold leading-tight tracking-tight text-white mb-6">
+    <Container className="flex flex-col items-center justify-center py-40 text-center">
+      <h1 className="max-w-3xl text-7xl md:text-8xl font-extrabold leading-tight tracking-tight text-white mb-8">
         AI Chatbot for Your Website
-        <span className="block text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-blue-500 mt-3">
+        <span className="block text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-blue-500 mt-4">
           Trained on Your Content
         </span>
       </h1>
 
-      <p className="mt-6 max-w-2xl text-xl text-gray-300">
+      <p className="mt-8 max-w-2xl text-2xl text-gray-300">
         ChattyDevs lets you add an AI-powered chatbot to your website using your own docs, FAQs, or knowledge base. No hallucinations. No setup pain.
       </p>
 
-      <div className="mt-12 flex flex-col gap-6 sm:flex-row">
+      <div className="mt-16 flex flex-col gap-8 sm:flex-row">
         <Button size="lg">
           <Link href="/signup">Get API Key</Link>
         </Button>
@@ -27,7 +27,7 @@ export default function HomePage() {
         </Button>
       </div>
 
-      <div className="mt-24 grid max-w-3xl grid-cols-1 gap-10 sm:grid-cols-3 text-left w-full">
+      <div className="mt-28 grid max-w-3xl grid-cols-1 gap-12 sm:grid-cols-3 text-left w-full">
         <Feature
           title="Your Data Only"
           description="Train the chatbot on your own website content, PDFs, or docs."
