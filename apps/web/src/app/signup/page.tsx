@@ -2,29 +2,41 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import LoadingSpinner from "@/app/components/LoadingSpinner";
 
 export default function SignupPage() {
   const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   async function handleSignup(e: React.FormEvent) {
     e.preventDefault();
-
-    const res = await fetch(
-      "https://api.skakram1110.workers.dev/users",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: "test@example.com" }),
+    setError("");
+    setLoading(true);
+    try {
+      const res = await fetch(
+        "https://api.skakram1110.workers.dev/users",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        }
+      );
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Signup failed");
       }
-    );
-
-    const data = await res.json();
-
-    localStorage.setItem("chattydevs_api_key", data.api_key);
-
-    router.push("/dashboard/projects");
+      localStorage.setItem("chattydevs_api_key", data.api_key);
+      router.push("/dashboard/projects");
+    } catch (err: unknown) {
+      if (err instanceof Error) setError(err.message);
+      else setError("Signup failed");
+    } finally {
+      setLoading(false);
+    }
   }
-
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
@@ -38,32 +50,21 @@ export default function SignupPage() {
 
         <form onSubmit={handleSignup} className="space-y-4">
           <input
-            type="text"
-            placeholder="Full name"
-            className="w-full border rounded px-3 py-2"
-            required
-          />
-
-          <input
             type="email"
             placeholder="Email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
             className="w-full border rounded px-3 py-2"
             required
           />
-
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full border rounded px-3 py-2"
-            required
-          />
-
           <button
             type="submit"
-            className="w-full bg-black text-white py-2 rounded text-sm"
+            className="w-full bg-black text-white py-2 rounded text-sm disabled:opacity-60"
+            disabled={loading}
           >
-            Sign up
+            {loading ? <LoadingSpinner /> : "Sign up"}
           </button>
+          {error && <p className="text-red-600 text-sm">{error}</p>}
         </form>
 
         <p className="text-xs text-gray-500 mt-4 text-center">

@@ -76,7 +76,13 @@ export default function FileUpload({ projectId }: Props) {
       </button>
 
       {message && (
-        <p className="text-sm text-gray-700 dark:text-gray-200">{message}</p>
+        <p className={
+          message.toLowerCase().includes("upload") || message.toLowerCase().includes("indexed")
+            ? "text-sm text-green-600 dark:text-green-400"
+            : "text-sm text-red-600 dark:text-red-400"
+        }>
+          {message}
+        </p>
       )}
     </div>
   );

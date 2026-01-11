@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function HomePage() {
   return (
-    <section className="flex flex-col items-center justify-center px-6 py-24 text-center">
+    <section className="flex flex-col items-center justify-center px-6 py-24 text-center max-w-4xl mx-auto">
       <h1 className="max-w-4xl text-4xl font-bold leading-tight sm:text-5xl">
         AI Chatbot for Your Website —
         <span className="block text-gray-500">

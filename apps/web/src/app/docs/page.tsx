@@ -1,6 +1,6 @@
 export default function DocsPage() {
   return (
-    <section className="mx-auto max-w-4xl px-6 py-20">
+    <section className="mx-auto max-w-3xl px-6 py-20">
       <h1 className="text-4xl font-bold">Documentation</h1>
 
       <p className="mt-4 text-gray-600">

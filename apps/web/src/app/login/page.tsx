@@ -13,7 +13,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-sm bg-white border rounded p-6">
+      <div className="w-full max-w-sm bg-white border rounded-xl p-6 shadow">
         <h1 className="text-xl font-semibold mb-1">
           Welcome back
         </h1>

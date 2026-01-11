@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import LoadingSpinner from "@/app/components/LoadingSpinner";
 
 type Project = {
   id: string;
@@ -38,9 +39,8 @@ export default function ProjectsPage() {
         if (!res.ok) {
           throw new Error(data.error || "Failed to load projects");
         }
-
-        setProjects(data.projects || []);
-      } catch (err) {
+        setProjects(data.projects);
+      } catch (err: unknown) {
         if (err instanceof Error) {
           setError(err.message);
         } else {
@@ -54,8 +54,45 @@ export default function ProjectsPage() {
     loadProjects();
   }, []);
 
-  if (loading) return <p>Loading projects...</p>;
-  if (error) return <p className="text-red-600">{error}</p>;
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+
+  if (error) {
+    return <div className="p-8"><p className="text-red-600">{error}</p></div>;
+  }
+
+  return (
+    <div className="max-w-2xl mx-auto py-8 px-4">
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold">Projects</h1>
+        <Link
+          href="/dashboard/projects/new"
+          className="bg-black text-white px-4 py-2 rounded text-sm"
+        >
+          New Project
+        </Link>
+      </div>
+
+      {projects.length === 0 ? (
+        <p className="text-gray-500">No projects found.</p>
+      ) : (
+        <ul className="space-y-4">
+          {projects.map((project) => (
+            <li key={project.id} className="bg-white border rounded-xl p-4 shadow">
+              <Link href={`/dashboard/projects/${project.id}`} className="font-medium text-blue-600 hover:underline">
+                {project.domain}
+              </Link>
+              <div className="text-xs text-gray-500 mt-1">
+                Created: {new Date(project.created_at).toLocaleString()}
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+// ...existing code...
 
   return (
     <div>

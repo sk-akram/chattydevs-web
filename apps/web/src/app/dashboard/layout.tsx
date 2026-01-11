@@ -1,5 +1,8 @@
 
-import { redirect } from "next/navigation";
+
+"use client";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
@@ -8,11 +11,15 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const isLoggedIn = true; // flip to false to test
-
-  if (!isLoggedIn) {
-    redirect("/login");
-  }
+  const router = useRouter();
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const apiKey = localStorage.getItem("chattydevs_api_key");
+      if (!apiKey) {
+        router.replace("/login");
+      }
+    }
+  }, [router]);
 
   return (
     <>

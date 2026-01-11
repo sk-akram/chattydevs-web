@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import MessageBubble from "./MessageBubble";
+import LoadingSpinner from "./LoadingSpinner";
 
 type Message = {
   role: "user" | "assistant";
@@ -79,28 +81,13 @@ export default function ChatBox({ projectId }: Props) {
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto space-y-3 text-sm mb-3 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700">
-        {messages.length === 0 && (
+        {messages.length === 0 && !sending && (
           <p className="text-gray-400">Ask something about your data…</p>
         )}
         {messages.map((m, i) => (
-          <div
-            key={i}
-            className={m.role === "user" ? "text-right" : "text-left"}
-          >
-            <div
-              className={
-                m.role === "user"
-                  ? "inline-block bg-gradient-to-r from-black to-gray-800 text-white px-3 py-2 rounded-lg shadow"
-                  : "inline-block bg-gray-100 dark:bg-gray-700 px-3 py-2 rounded-lg shadow"
-              }
-            >
-              {m.content}
-            </div>
-          </div>
+          <MessageBubble key={i} role={m.role} content={m.content} />
         ))}
-        {sending && (
-          <p className="text-gray-400 text-xs">Assistant is typing…</p>
-        )}
+        {sending && <LoadingSpinner />}
       </div>
 
       {/* Input */}
@@ -122,7 +109,9 @@ export default function ChatBox({ projectId }: Props) {
       </div>
 
       {error && (
-        <p className="text-xs text-red-600 mt-2">{error}</p>
+        <p className="text-xs text-red-600 mt-2 flex items-center gap-1">
+          <span aria-hidden="true">❗</span> {error}
+        </p>
       )}
     </div>
   );

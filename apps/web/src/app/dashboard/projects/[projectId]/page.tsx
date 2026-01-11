@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import FileUpload from "@/app/components/FileUpload";
 import ChatBox from "@/app/components/ChatBox";
+import LoadingSpinner from "@/app/components/LoadingSpinner";
 
 export const runtime = "edge";
 
@@ -106,14 +107,14 @@ export default function ProjectDetailPage() {
     }
   }
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <LoadingSpinner />;
 
   if (!project) {
-    return <p className="text-red-600">Project not found</p>;
+    return <div className="p-8"><p className="text-red-600">Project not found</p></div>;
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-2xl mx-auto py-8 px-4">
       {/* Header */}
       <div>
         <h1 className="text-xl font-semibold">
@@ -125,7 +126,7 @@ export default function ProjectDetailPage() {
       </div>
 
       {/* Training */}
-      <div className="bg-white border rounded p-4 space-y-3">
+      <div className="bg-white border rounded-xl p-4 space-y-3 shadow">
         <h2 className="font-medium">Training</h2>
         <FileUpload projectId={project.id} />
         <button
@@ -144,7 +145,7 @@ export default function ProjectDetailPage() {
       <ChatBox projectId={project.id} />
 
       {/* Widget snippet */}
-      <div className="bg-white border rounded p-4">
+      <div className="bg-white border rounded-xl p-4 shadow">
         <h2 className="font-medium mb-2">Embed Widget</h2>
 
         <pre className="bg-gray-100 text-xs p-3 rounded overflow-x-auto">
