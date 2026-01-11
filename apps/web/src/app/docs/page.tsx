@@ -1,13 +1,13 @@
 export default function DocsPage() {
   return (
     <section className="mx-auto max-w-3xl px-6 py-20">
-      <h1 className="text-4xl font-bold">Documentation</h1>
+      <h1 className="text-4xl font-extrabold text-gray-900 mb-2">Documentation</h1>
 
-      <p className="mt-4 text-gray-600">
+      <p className="mt-2 text-gray-500 mb-8">
         Everything you need to integrate ChattyDevs.
       </p>
 
-      <div className="mt-10 space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <DocItem
           title="1. Create an Account"
           description="Sign up and generate your API key and Project ID."
@@ -37,9 +37,9 @@ function DocItem({
   description: string;
 }) {
   return (
-    <div>
-      <h3 className="font-semibold">{title}</h3>
-      <p className="text-gray-600">{description}</p>
+    <div className="card">
+      <h3 className="text-lg font-semibold text-gray-900 mb-1">{title}</h3>
+      <p className="text-gray-500">{description}</p>
     </div>
   );
 }

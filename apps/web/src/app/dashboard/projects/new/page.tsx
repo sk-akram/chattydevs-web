@@ -57,16 +57,16 @@ export default function NewProjectPage() {
   }
 
   return (
-    <div className="max-w-lg mx-auto py-10 px-4">
-      <h1 className="text-2xl font-bold mb-6">New Project</h1>
-      <div className="bg-white border rounded-xl p-6 space-y-4 shadow">
-        <label className="block">
-          <span className="text-gray-700">Website URL</span>
+    <div className="max-w-lg mx-auto py-12 px-4">
+      <h1 className="text-3xl font-extrabold mb-6 text-gray-900">New Project</h1>
+      <div className="card">
+        <label className="block mb-4">
+          <span className="text-gray-700 font-medium">Website URL</span>
           <input
             type="url"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
-            className="mt-1 block w-full border rounded px-3 py-2 text-sm"
+            className="mt-1 block w-full"
             placeholder="https://example.com"
             required
           />
@@ -75,12 +75,12 @@ export default function NewProjectPage() {
         <button
           onClick={handleCreate}
           disabled={loading}
-          className="bg-black text-white px-4 py-2 rounded text-sm disabled:opacity-60"
+          className="btn-primary w-full disabled:opacity-60"
         >
           {loading ? <LoadingSpinner /> : "Create Project"}
         </button>
 
-        {error && <p className="text-red-600 text-sm">{error}</p>}
+        {error && <p className="text-red-600 text-sm mt-2">{error}</p>}
       </div>
     </div>
   );

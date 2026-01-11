@@ -12,33 +12,29 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-sm bg-white border rounded-xl p-6 shadow">
-        <h1 className="text-xl font-semibold mb-1">
-          Welcome back
-        </h1>
-        <p className="text-sm text-gray-600 mb-6">
-          Log in to your ChattyDevs account
-        </p>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50 px-4">
+      <div className="w-full max-w-sm card">
+        <h1 className="text-2xl font-extrabold mb-1 text-gray-900">Welcome back</h1>
+        <p className="text-sm text-gray-500 mb-6">Log in to your ChattyDevs account</p>
 
         <form onSubmit={handleLogin} className="space-y-4">
           <input
             type="email"
             placeholder="Email"
-            className="w-full border rounded px-3 py-2"
+            className="w-full"
             required
           />
 
           <input
             type="password"
             placeholder="Password"
-            className="w-full border rounded px-3 py-2"
+            className="w-full"
             required
           />
 
           <button
             type="submit"
-            className="w-full bg-black text-white py-2 rounded text-sm"
+            className="btn-primary w-full"
           >
             Log in
           </button>
@@ -46,9 +42,7 @@ export default function LoginPage() {
 
         <p className="text-xs text-gray-500 mt-4 text-center">
           Don’t have an account?{" "}
-          <Link href="/signup" className="underline">
-            Sign up
-          </Link>
+          <Link href="/signup" className="text-blue-600 hover:underline font-medium">Sign up</Link>
         </p>
       </div>
     </div>

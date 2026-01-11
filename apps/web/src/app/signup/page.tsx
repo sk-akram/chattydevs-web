@@ -39,14 +39,10 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-sm bg-white border rounded p-6">
-        <h1 className="text-xl font-semibold mb-1">
-          Create your account
-        </h1>
-        <p className="text-sm text-gray-600 mb-6">
-          Start building your AI chatbot
-        </p>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50 px-4">
+      <div className="w-full max-w-sm card">
+        <h1 className="text-2xl font-extrabold mb-1 text-gray-900">Create your account</h1>
+        <p className="text-sm text-gray-500 mb-6">Start building your AI chatbot</p>
 
         <form onSubmit={handleSignup} className="space-y-4">
           <input
@@ -54,12 +50,12 @@ export default function SignupPage() {
             placeholder="Email"
             value={email}
             onChange={e => setEmail(e.target.value)}
-            className="w-full border rounded px-3 py-2"
+            className="w-full"
             required
           />
           <button
             type="submit"
-            className="w-full bg-black text-white py-2 rounded text-sm disabled:opacity-60"
+            className="btn-primary w-full disabled:opacity-60"
             disabled={loading}
           >
             {loading ? <LoadingSpinner /> : "Sign up"}
@@ -69,9 +65,7 @@ export default function SignupPage() {
 
         <p className="text-xs text-gray-500 mt-4 text-center">
           Already have an account?{" "}
-          <Link href="/login" className="underline">
-            Log in
-          </Link>
+          <Link href="/login" className="text-blue-600 hover:underline font-medium">Log in</Link>
         </p>
       </div>
     </div>

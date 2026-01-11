@@ -3,16 +3,19 @@ import Link from "next/link";
 
 export default function Navbar() {
   return (
-    <nav className="bg-gradient-to-r from-black via-gray-900 to-gray-800 shadow-md">
+    <nav className="bg-white border-b shadow-sm sticky top-0 z-30">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <div className="text-xl font-extrabold tracking-tight text-white select-none">ChattyDevs</div>
-        <div className="flex items-center gap-4">
-          <a href="/login" className="text-sm text-gray-300 hover:text-white transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-white rounded px-2 py-1">
+        <div className="flex items-center gap-2 select-none">
+          <span className="inline-block w-7 h-7 rounded-full bg-gradient-to-br from-blue-600 to-indigo-500 mr-2"></span>
+          <span className="text-2xl font-extrabold tracking-tight text-gray-900">ChattyDevs</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <a href="/login" className="btn-secondary text-base font-medium">
             Login
           </a>
           <a
             href="/signup"
-            className="rounded-md bg-white px-4 py-2 text-sm text-black font-semibold shadow hover:bg-gray-200 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-black"
+            className="btn-primary text-base font-medium shadow"
           >
             Get started
           </a>

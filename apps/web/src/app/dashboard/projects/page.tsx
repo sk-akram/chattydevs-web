@@ -63,27 +63,29 @@ export default function ProjectsPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto py-8 px-4">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Projects</h1>
+    <div className="max-w-2xl mx-auto py-12 px-4">
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-3xl font-extrabold text-gray-900">Projects</h1>
         <Link
           href="/dashboard/projects/new"
-          className="bg-black text-white px-4 py-2 rounded text-sm"
+          className="btn-primary text-base"
         >
           New Project
         </Link>
       </div>
 
       {projects.length === 0 ? (
-        <p className="text-gray-500">No projects found.</p>
+        <div className="card text-center">
+          <p className="text-gray-500">No projects found.</p>
+        </div>
       ) : (
         <ul className="space-y-4">
           {projects.map((project) => (
-            <li key={project.id} className="bg-white border rounded-xl p-4 shadow">
-              <Link href={`/dashboard/projects/${project.id}`} className="font-medium text-blue-600 hover:underline">
+            <li key={project.id} className="card flex flex-col gap-1">
+              <Link href={`/dashboard/projects/${project.id}`} className="font-semibold text-blue-700 hover:underline text-lg">
                 {project.domain}
               </Link>
-              <div className="text-xs text-gray-500 mt-1">
+              <div className="text-xs text-gray-400 mt-1">
                 Created: {new Date(project.created_at).toLocaleString()}
               </div>
             </li>

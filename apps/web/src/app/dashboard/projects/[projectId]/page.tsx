@@ -114,39 +114,39 @@ export default function ProjectDetailPage() {
   }
 
   return (
-    <div className="space-y-6 max-w-2xl mx-auto py-8 px-4">
+    <div className="space-y-8 max-w-2xl mx-auto py-12 px-4">
       {/* Header */}
-      <div>
-        <h1 className="text-xl font-semibold">
+      <div className="mb-2">
+        <h1 className="text-3xl font-extrabold text-gray-900">
           Project: {project.id.slice(0, 8)}
         </h1>
-        <p className="text-gray-600">
-          Domain: {project.domain}
+        <p className="text-gray-500">
+          Domain: <span className="font-medium text-blue-700">{project.domain}</span>
         </p>
       </div>
 
       {/* Training */}
-      <div className="bg-white border rounded-xl p-4 space-y-3 shadow">
-        <h2 className="font-medium">Training</h2>
+      <div className="card space-y-4">
+        <h2 className="font-semibold text-lg text-gray-900">Training</h2>
         <FileUpload projectId={project.id} />
         <button
           onClick={handleIngest}
           disabled={ingesting}
-          className="bg-black text-white px-4 py-2 rounded text-sm disabled:opacity-60"
+          className="btn-primary w-full disabled:opacity-60"
         >
           {ingesting ? "Training..." : "Start Training"}
         </button>
 
         {result && (
-          <p className="text-sm text-gray-700">{result}</p>
+          <p className="text-sm text-green-700 font-medium">{result}</p>
         )}
       </div>
 
       <ChatBox projectId={project.id} />
 
       {/* Widget snippet */}
-      <div className="bg-white border rounded-xl p-4 shadow">
-        <h2 className="font-medium mb-2">Embed Widget</h2>
+      <div className="card">
+        <h2 className="font-semibold mb-2 text-lg text-gray-900">Embed Widget</h2>
 
         <pre className="bg-gray-100 text-xs p-3 rounded overflow-x-auto">
 {`<script
