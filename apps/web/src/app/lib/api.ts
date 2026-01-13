@@ -38,10 +38,32 @@ export const api = {
     return data;
   },
 
-  async getProject(id: string): Promise<{ project: { id: string; domain: string; created_at: string } }> {
+  async getProject(id: string): Promise<{
+    project: {
+      id: string;
+      domain: string;
+      created_at: string;
+      allowed_sources?: string | null;
+      admin_email?: string | null;
+    };
+  }> {
     const res = await fetch(`${API_BASE}/projects/${id}`, { headers: getHeaders(), cache: "no-store" });
     const data = await res.json();
     if (!res.ok) throw new Error(data?.error || "Failed to fetch project");
+    return data;
+  },
+
+  async updateProjectSettings(
+    projectId: string,
+    payload: { allowed_sources: string; admin_email: string }
+  ): Promise<{ ok: true }> {
+    const res = await fetch(`${API_BASE}/projects/${projectId}/settings`, {
+      method: "POST",
+      headers: getHeaders(),
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data?.error || "Failed to update project settings");
     return data;
   },
 

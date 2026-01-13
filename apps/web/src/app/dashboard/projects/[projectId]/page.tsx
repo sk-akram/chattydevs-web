@@ -16,7 +16,13 @@ import {
   Section,
 } from "../../../components/ui";
 
-type Project = { id: string; domain: string; created_at: string };
+type Project = {
+  id: string;
+  domain: string;
+  created_at: string;
+  allowed_sources?: string | null;
+  admin_email?: string | null;
+};
 
 type ChatMessage = { role: "user" | "bot"; content: string };
 
@@ -36,6 +42,10 @@ export default function ProjectDetailPage() {
   const [crawling, setCrawling] = useState(false);
   const [notif, setNotif] = useState<{ text: string; type: "success" | "error" } | null>(null);
 
+  const [allowedSources, setAllowedSources] = useState("");
+  const [adminEmail, setAdminEmail] = useState("");
+  const [savingSettings, setSavingSettings] = useState(false);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
 
@@ -53,6 +63,8 @@ export default function ProjectDetailPage() {
         if (!mounted) return;
         setProject(data.project);
         setCrawlUrl(data.project.domain);
+        setAllowedSources(data.project.allowed_sources ?? "");
+        setAdminEmail(data.project.admin_email ?? "");
       } catch {
         if (!mounted) return;
         setProject(null);
@@ -67,6 +79,31 @@ export default function ProjectDetailPage() {
       mounted = false;
     };
   }, [projectId]);
+
+  async function handleSaveSettings() {
+    if (!project || savingSettings) return;
+
+    const email = adminEmail.trim();
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setNotif({ text: "Please enter a valid admin email.", type: "error" });
+      return;
+    }
+
+    setSavingSettings(true);
+    setNotif(null);
+
+    try {
+      await api.updateProjectSettings(project.id, {
+        allowed_sources: allowedSources.trim(),
+        admin_email: email,
+      });
+      setNotif({ text: "Project settings saved.", type: "success" });
+    } catch {
+      setNotif({ text: "Failed to save settings.", type: "error" });
+    } finally {
+      setSavingSettings(false);
+    }
+  }
 
   useEffect(() => {
     setApiKey(localStorage.getItem("chattydevs_api_key") || "");
@@ -204,6 +241,29 @@ export default function ProjectDetailPage() {
           <h2 className="text-lg font-bold text-white mb-2">Project Info</h2>
           <p className="text-sm text-slate-400">Project ID: <span className="font-mono text-slate-300">{project.id}</span></p>
           <p className="text-sm text-slate-400">Domain: <span className="text-slate-300">{project.domain}</span></p>
+
+          <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <Input
+              label="Source Location (Allowed Origins)"
+              placeholder="google.com"
+              value={allowedSources}
+              onChange={(e) => setAllowedSources(e.target.value)}
+              hint="Comma-separated. If the site origin contains any value here, the widget can access this project. Example: google.com"
+            />
+            <Input
+              label="Admin Email (Escalations)"
+              placeholder="admin@yourcompany.com"
+              value={adminEmail}
+              onChange={(e) => setAdminEmail(e.target.value)}
+              hint="When the bot can’t answer, we’ll email this address (widget only)."
+            />
+          </div>
+
+          <div className="mt-4 flex justify-end">
+            <Button onClick={handleSaveSettings} isLoading={savingSettings} disabled={savingSettings}>
+              Save Settings
+            </Button>
+          </div>
         </Card>
 
         {/* Row 2 */}
