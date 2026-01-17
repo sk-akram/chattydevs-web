@@ -44,9 +44,12 @@ export default function LoginPage() {
         <div className="text-center mb-10">
           <Link href="/" className="inline-flex items-center gap-2 mb-8">
             <div className="w-10 h-10 bg-slate-950 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/10">
-              <img src="/brand/chattydevs_logo.png" alt="ChattyDevs" className="w-10 h-10 object-contain" />
+              <img src="/brand/chattydevs_icon.png" alt="ChattyDevs" className="w-10 h-10 object-contain" />
             </div>
-            <span className="font-bold text-2xl">ChattyDevs</span>
+            <span className="font-bold text-2xl">
+              <span className="text-white">Chatty</span>
+              <span className="gradient-text">Devs</span>
+            </span>
           </Link>
           <h1 className="text-3xl font-bold text-white mb-2">Welcome back</h1>
           <p className="text-slate-400">Enter your email to continue.</p>

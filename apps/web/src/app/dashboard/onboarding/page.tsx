@@ -94,7 +94,7 @@ export default function OnboardingPage() {
 
           <div className="mt-6 rounded-xl border border-slate-800/60 bg-slate-950/30 p-4">
             <div className="flex items-center gap-3">
-              <img src="/brand/axion_logo.png" alt="Axion" className="w-8 h-8 object-contain" />
+              <img src="/brand/axion_icon.png" alt="Axion" className="w-8 h-8 object-contain" />
               <p className="text-sm text-slate-300 font-semibold">Axion</p>
             </div>
             <p className="text-xs text-slate-500 mt-1">AI chatbot trained on your content</p>

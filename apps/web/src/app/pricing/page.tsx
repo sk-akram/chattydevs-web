@@ -13,7 +13,7 @@ export default function PricingPage() {
         <div className="flex items-center justify-between gap-6 mb-10">
           <div>
             <div className="flex items-center gap-4 mb-2">
-              <img src="/brand/axion_logo.png" alt="Axion" className="w-10 h-10 object-contain" />
+              <img src="/brand/axion_icon.png" alt="Axion" className="w-10 h-10 object-contain" />
               <h1 className="text-4xl font-extrabold text-white">Axion Pricing</h1>
             </div>
             <p className="text-slate-400">Payments are disabled during validation. Limits are enforced. Upgrade flow is coming soon.</p>

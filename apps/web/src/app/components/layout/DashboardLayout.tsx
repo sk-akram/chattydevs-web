@@ -74,9 +74,12 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
         <div className="px-2">
           <Link href="/" className="flex items-center gap-3 group">
             <div className="w-10 h-10 bg-slate-950 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/10 group-hover:scale-110 transition-transform">
-              <img src="/brand/chattydevs_logo.png" alt="ChattyDevs" className="w-10 h-10 object-contain" />
+              <img src="/brand/chattydevs_icon.png" alt="ChattyDevs" className="w-10 h-10 object-contain" />
             </div>
-            <span className="font-bold text-2xl tracking-tighter text-white">ChattyDevs</span>
+            <span className="font-bold text-2xl tracking-tighter">
+              <span className="text-white">Chatty</span>
+              <span className="gradient-text">Devs</span>
+            </span>
           </Link>
         </div>
 
