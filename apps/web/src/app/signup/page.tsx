@@ -43,8 +43,8 @@ export default function SignupPage() {
       <Container className="max-w-md">
         <div className="text-center mb-10">
           <Link href="/" className="inline-flex items-center gap-2 mb-8">
-            <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-indigo-500/20">
-              C
+            <div className="w-10 h-10 bg-slate-950 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/10">
+              <img src="/brand/chattydevs_logo.png" alt="ChattyDevs" className="w-10 h-10 object-contain" />
             </div>
             <span className="font-bold text-2xl">ChattyDevs</span>
           </Link>

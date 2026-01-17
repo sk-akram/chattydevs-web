@@ -17,7 +17,10 @@ export default function ProductsPage() {
           <Card className="p-8">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h2 className="text-2xl font-bold text-white">Axion</h2>
+                <div className="flex items-center gap-3">
+                  <img src="/brand/axion_logo.png" alt="Axion" className="w-10 h-10 object-contain" />
+                  <h2 className="text-2xl font-bold text-white">Axion</h2>
+                </div>
                 <p className="text-slate-500 mt-2">AI chatbot trained on your content.</p>
               </div>
               <Badge color="indigo">Available</Badge>
