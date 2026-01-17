@@ -16,10 +16,10 @@ export function Navbar() {
     <nav className="border-b border-slate-900 bg-slate-950/70 backdrop-blur-xl sticky top-0 z-50">
       <Container className="flex items-center justify-between h-20">
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 bg-slate-950 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/10 group-hover:scale-110 transition-transform">
-            <img src="/brand/chattydevs_icon.png" alt="ChattyDevs" className="w-10 h-10 object-contain" />
+          <div className="w-10 h-10 bg-slate-950 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/10 group-hover:scale-110 transition-transform shrink-0">
+            <img src="/brand/chattydevs_icon.png" alt="ChattyDevs" className="w-10 h-10 object-contain block" />
           </div>
-          <span className="font-bold text-2xl tracking-tighter">
+          <span className="font-bold text-2xl tracking-tighter inline-flex items-center leading-none">
             <span className="text-white">Chatty</span>
             <span className="gradient-text">Devs</span>
           </span>

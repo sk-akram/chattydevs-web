@@ -17,8 +17,8 @@ export default function AxionProductPage() {
           <div className="flex items-start justify-between gap-6">
             <div>
               <div className="flex items-center gap-4">
-                <img src="/brand/axion_icon.png" alt="Axion" className="w-12 h-12 object-contain" />
-                <h1 className="text-4xl md:text-5xl font-extrabold text-white">Axion</h1>
+                <img src="/brand/axion_icon.png" alt="Axion" className="w-12 h-12 object-contain shrink-0" />
+                <h1 className="text-4xl md:text-5xl font-extrabold text-white leading-none">Axion</h1>
               </div>
               <p className="text-slate-400 mt-3 max-w-2xl">
                 Axion Chat by ChattyDevs: an AI chatbot trained on your website, docs, and files.
