@@ -17,7 +17,7 @@ export function Navbar() {
       <Container className="flex items-center justify-between h-20">
         <Link href="/" className="flex items-center gap-3 group">
           <div className="w-10 h-10 bg-slate-950 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/10 group-hover:scale-110 transition-transform shrink-0">
-            <img src="/brand/chattydevs_icon.png" alt="ChattyDevs" className="w-10 h-10 object-contain block" />
+            <img src="/brand/chattydevs_icon.png" alt="ChattyDevs" className="w-10 h-10 object-contain block translate-y-[2px]" />
           </div>
           <span className="font-bold text-2xl tracking-tighter inline-flex items-center leading-none">
             <span className="text-white">Chatty</span>
