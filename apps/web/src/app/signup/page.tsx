@@ -44,9 +44,9 @@ export default function SignupPage() {
         <div className="text-center mb-10">
           <Link href="/" className="inline-flex items-center gap-2 mb-8">
             <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-indigo-500/20">
-              A
+              C
             </div>
-            <span className="font-bold text-2xl">Axion Chat</span>
+            <span className="font-bold text-2xl">ChattyDevs</span>
           </Link>
           <h1 className="text-3xl font-bold text-white mb-2">Create your account</h1>
           <p className="text-slate-400">Enter your email to get started with your first bot.</p>

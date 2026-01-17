@@ -3,8 +3,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Axion Chat by ChattyDevs",
-  description: "Axion Chat by ChattyDevs AI chatbot trained on your content.",
+  title: "ChattyDevs",
+  description: "Plugins, AI chatbots, agents, and services.",
 };
 
 export default function RootLayout({

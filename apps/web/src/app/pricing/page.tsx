@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { Navbar } from "../components/layout";
 import { Button, Card, Container, Badge } from "../components/ui";
 
@@ -8,8 +10,22 @@ export default function PricingPage() {
     <div className="min-h-screen bg-slate-950">
       <Navbar />
       <Container className="py-16">
-        <h1 className="text-4xl font-extrabold text-white mb-2">Pricing</h1>
-        <p className="text-slate-400 mb-10">Payments are disabled during validation. Limits are enforced. Upgrade flow is coming soon.</p>
+        <div className="flex items-center justify-between gap-6 mb-10">
+          <div>
+            <h1 className="text-4xl font-extrabold text-white mb-2">Axion Pricing</h1>
+            <p className="text-slate-400">Payments are disabled during validation. Limits are enforced. Upgrade flow is coming soon.</p>
+          </div>
+
+          <div className="flex gap-3">
+            <Link href="/products">
+              <Button variant="outline">All Products</Button>
+            </Link>
+            <Link href="/products/axion">
+              <Button variant="outline">About Axion</Button>
+            </Link>
+          </div>
+        </div>
+
         <div className="grid md:grid-cols-3 gap-6">
           <Card className="p-8">
             <div className="flex items-start justify-between gap-4">

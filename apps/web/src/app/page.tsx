@@ -26,12 +26,12 @@ export default function HomePage() {
           </div>
 
           <h1 className="text-6xl md:text-8xl font-black tracking-tight mb-10 leading-[0.9] text-white">
-            Axion Chat <br />
-            <span className="gradient-text">by ChattyDevs</span>
+            Build with <br />
+            <span className="gradient-text">ChattyDevs</span>
           </h1>
 
           <p className="text-xl text-slate-400 max-w-2xl mx-auto mb-14 leading-relaxed">
-            Axion Chat by ChattyDevs AI chatbot trained on your content.
+            Plugins, AI chatbots, agents, and services to ship production-grade AI experiences.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-5">
