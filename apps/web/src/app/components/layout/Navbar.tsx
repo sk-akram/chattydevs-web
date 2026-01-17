@@ -17,9 +17,9 @@ export function Navbar() {
       <Container className="flex items-center justify-between h-20">
         <Link href="/" className="flex items-center gap-3 group">
           <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg shadow-indigo-500/20 group-hover:scale-110 transition-transform">
-            C
+            A
           </div>
-          <span className="font-bold text-2xl tracking-tighter text-white">ChattyDevs</span>
+          <span className="font-bold text-2xl tracking-tighter text-white">Axion Chat</span>
         </Link>
 
         <div className="hidden md:flex items-center gap-8">

@@ -20,6 +20,97 @@ export const api = {
     return data;
   },
 
+  async me(): Promise<{
+    user: { id: string };
+    product: { id: string; slug: string; name: string };
+    subscription: {
+      id: string;
+      user_id: string;
+      product_id: string;
+      plan_id: string;
+      status: string;
+      started_at: string;
+      current_period_start: string;
+      current_period_end: string;
+    } | null;
+    plan: {
+      id: string;
+      product_id: string;
+      slug: string;
+      name: string;
+      price_inr: number;
+      message_limit_monthly: number | null;
+      training_limit_lifetime: number | null;
+      project_limit: number | null;
+      crawl_max_pages: number | null;
+      upload_mb_total: number | null;
+      branding_powered_by_chattydevs: number;
+    } | null;
+    usage: {
+      id: string;
+      user_id: string;
+      product_id: string;
+      period_start: string;
+      period_end: string;
+      message_count: number;
+    } | null;
+    stats: {
+      id: string;
+      user_id: string;
+      product_id: string;
+      trainings_used: number;
+      upload_bytes_used: number;
+      documents_uploaded: number;
+      pages_crawled: number;
+      last_training_at: string | null;
+    } | null;
+  }> {
+    const res = await fetch(`${API_BASE}/me`, { headers: getHeaders(), cache: "no-store" });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data?.error || "Failed to fetch account");
+    return data;
+  },
+
+  async listProducts(): Promise<{ products: Array<{ id: string; slug: string; name: string; created_at: string }> }> {
+    const res = await fetch(`${API_BASE}/catalog/products`, { headers: getHeaders(), cache: "no-store" });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data?.error || "Failed to fetch products");
+    return data;
+  },
+
+  async listPlans(productSlug: string): Promise<{
+    product: { id: string; slug: string; name: string };
+    plans: Array<{
+      id: string;
+      product_id: string;
+      slug: string;
+      name: string;
+      price_inr: number;
+      message_limit_monthly: number | null;
+      training_limit_lifetime: number | null;
+      project_limit: number | null;
+      crawl_max_pages: number | null;
+      upload_mb_total: number | null;
+      branding_powered_by_chattydevs: number;
+    }>;
+  }> {
+    const res = await fetch(`${API_BASE}/catalog/products/${productSlug}/plans`, { headers: getHeaders(), cache: "no-store" });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data?.error || "Failed to fetch plans");
+    return data;
+  },
+
+  async selectPlan(productSlug: string, planSlug: string): Promise<{ ok: true }> {
+    const res = await fetch(`${API_BASE}/subscriptions/select`, {
+      method: "POST",
+      headers: getHeaders(),
+      body: JSON.stringify({ product_slug: productSlug, plan_slug: planSlug }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data?.error || "Failed to select plan");
+    return data;
+  },
+
   async listProjects(): Promise<{ projects: Array<{ id: string; domain: string; created_at: string }> }> {
     const res = await fetch(`${API_BASE}/projects`, { headers: getHeaders() });
     const data = await res.json();

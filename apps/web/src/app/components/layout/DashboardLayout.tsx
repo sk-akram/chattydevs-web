@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import { api } from "../../lib/api";
 import { Button, Container } from "../ui";
 
 const menuItems = [
@@ -35,6 +36,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
 
   const [apiKey, setApiKey] = useState<string>("");
   const [copied, setCopied] = useState(false);
+  const [planName, setPlanName] = useState<string>("Free");
 
   const handleLogout = () => {
     localStorage.removeItem("chattydevs_api_key");
@@ -46,6 +48,24 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
     setApiKey(localStorage.getItem("chattydevs_api_key") || "");
   }, []);
 
+  useEffect(() => {
+    let mounted = true;
+    async function load() {
+      try {
+        const me = await api.me();
+        if (!mounted) return;
+        setPlanName(me.plan?.name || "Free");
+      } catch {
+        if (!mounted) return;
+        setPlanName("Free");
+      }
+    }
+    load();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   const email = typeof window !== "undefined" ? localStorage.getItem("chattydevs_email") : null;
 
   return (
@@ -54,9 +74,9 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
         <div className="px-2">
           <Link href="/" className="flex items-center gap-3 group">
             <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg shadow-indigo-500/20 group-hover:scale-110 transition-transform">
-              C
+              A
             </div>
-            <span className="font-bold text-2xl tracking-tighter text-white">ChattyDevs</span>
+            <span className="font-bold text-2xl tracking-tighter text-white">Axion Chat</span>
           </Link>
         </div>
 
@@ -104,7 +124,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
               </div>
               <div className="flex-1 overflow-hidden">
                 <p className="text-xs font-bold text-white truncate">{email || "User Account"}</p>
-                <p className="text-[10px] text-slate-500 font-medium">Free Plan</p>
+                <p className="text-[10px] text-slate-500 font-medium">{planName} Plan</p>
               </div>
             </div>
 
@@ -140,7 +160,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
               className="w-full text-xs py-1.5 h-auto justify-start"
               onClick={() => router.push("/pricing")}
             >
-              Upgrade to Pro
+              Upgrade (coming soon)
             </Button>
           </div>
 

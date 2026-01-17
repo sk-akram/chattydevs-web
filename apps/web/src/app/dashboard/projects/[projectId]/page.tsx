@@ -435,7 +435,7 @@ export default function ProjectDetailPage() {
               <div className="bg-slate-950 rounded-xl border border-slate-800 p-6">
                 <h3 className="text-lg font-bold text-white mb-1">WordPress Plugin</h3>
                 <p className="text-sm text-slate-500 mb-6">
-                  In WordPress → Plugins → ChattyDevs, paste these credentials to activate your bot.
+                  In WordPress → Plugins → Axion Chat, paste these credentials to activate your bot.
                 </p>
 
                 <div className="space-y-4">

@@ -44,9 +44,9 @@ export default function LoginPage() {
         <div className="text-center mb-10">
           <Link href="/" className="inline-flex items-center gap-2 mb-8">
             <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-indigo-500/20">
-              C
+              A
             </div>
-            <span className="font-bold text-2xl">ChattyDevs</span>
+            <span className="font-bold text-2xl">Axion Chat</span>
           </Link>
           <h1 className="text-3xl font-bold text-white mb-2">Welcome back</h1>
           <p className="text-slate-400">Enter your email to continue.</p>

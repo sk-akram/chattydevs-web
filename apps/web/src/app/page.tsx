@@ -26,13 +26,12 @@ export default function HomePage() {
           </div>
 
           <h1 className="text-6xl md:text-8xl font-black tracking-tight mb-10 leading-[0.9] text-white">
-            Automate Support <br />
-            <span className="gradient-text">With Custom AI</span>
+            Axion Chat <br />
+            <span className="gradient-text">by ChattyDevs</span>
           </h1>
 
           <p className="text-xl text-slate-400 max-w-2xl mx-auto mb-14 leading-relaxed">
-            Transform your knowledge base into an intelligent chatbot in seconds. Ingest PDFs, crawl sites,
-            and deploy custom models trained on your specific data.
+            Axion Chat by ChattyDevs AI chatbot trained on your content.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-5">
@@ -97,7 +96,7 @@ export default function HomePage() {
 
       <footer className="py-20 border-t border-slate-900">
         <Container className="flex items-center justify-between text-slate-600 text-[10px] font-bold uppercase tracking-widest">
-          <span>© 2026 ChattyDevs Inc.</span>
+          <span>© ChattyDevs Technologies Pvt Ltd</span>
           <div className="flex gap-8">
             <a href="#">Security</a>
             <a href="#">Compliance</a>
