@@ -8,19 +8,19 @@ import { Button, Card, Input, Section } from "../../../components/ui";
 
 export default function NewProjectPage() {
   const router = useRouter();
-  const [domain, setDomain] = useState("");
+  const [projectName, setProjectName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!domain) return;
+    if (!projectName.trim()) return;
 
     setLoading(true);
     setError(null);
 
     try {
-      const response = await api.createProject(domain);
+      const response = await api.createProject(projectName.trim());
       const projectId = response.project_id || response.id;
       if (!projectId) throw new Error("Project created but no id returned");
       router.push(`/dashboard/projects/${projectId}`);
@@ -34,16 +34,16 @@ export default function NewProjectPage() {
   return (
     <Section
       title="Create New Project"
-      description="Start by defining the primary domain for your chatbot. You can add more data sources later."
+      description="Name your chatbot project. You can add training sources and deployment settings later."
     >
       <div className="max-w-2xl mx-auto">
         <Card className="p-8 shadow-xl bg-slate-900/60">
           <form onSubmit={handleSubmit} className="flex flex-col gap-6">
             <Input
-              label="Domain or Application Name"
-              placeholder="e.g., https://my-docs.com"
-              value={domain}
-              onChange={(e) => setDomain(e.target.value)}
+              label="Project Name"
+              placeholder="e.g., My Website Bot"
+              value={projectName}
+              onChange={(e) => setProjectName(e.target.value)}
               required
               error={error || undefined}
               disabled={loading}
@@ -59,7 +59,7 @@ export default function NewProjectPage() {
                 />
               </svg>
               <p>
-                This will be the default identifier for your bot. Use a domain to enable the website crawler effectively.
+                This name is shown in your dashboard and widget setup. Project names must be unique per account.
               </p>
             </div>
             <div className="flex items-center gap-3 pt-4">

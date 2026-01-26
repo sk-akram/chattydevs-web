@@ -63,7 +63,7 @@ export default function ProjectsPage() {
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded-xl bg-indigo-600 flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition-transform">
-                    {project.domain.replace("https://", "").replace("http://", "").charAt(0).toUpperCase()}
+                    {project.domain.trim().charAt(0).toUpperCase()}
                   </div>
                   <div>
                     <h3 className="text-lg font-bold group-hover:text-indigo-400 transition-colors text-white">

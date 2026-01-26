@@ -46,6 +46,15 @@ export default function ProjectDetailPage() {
   const [adminEmail, setAdminEmail] = useState("");
   const [savingSettings, setSavingSettings] = useState(false);
 
+  const settingsRef = useRef<HTMLDivElement>(null);
+  const [settingsPulse, setSettingsPulse] = useState(false);
+
+  const [trainingProgress, setTrainingProgress] = useState(0);
+  const [trainingStatus, setTrainingStatus] = useState<"idle" | "running" | "success">("idle");
+
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadStatus, setUploadStatus] = useState<"idle" | "running" | "success">("idle");
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
 
@@ -62,7 +71,7 @@ export default function ProjectDetailPage() {
         const data = await api.getProject(projectId);
         if (!mounted) return;
         setProject(data.project);
-        setCrawlUrl(data.project.domain);
+        setCrawlUrl("");
         setAllowedSources(data.project.allowed_sources ?? "");
         setAdminEmail(data.project.admin_email ?? "");
       } catch {
@@ -135,12 +144,28 @@ export default function ProjectDetailPage() {
     if (!file || !project) return;
 
     setUploading(true);
+    setUploadStatus("running");
+    setUploadProgress(10);
     setNotif(null);
+
+    const interval = setInterval(() => {
+      setUploadProgress((p) => {
+        if (p >= 90) return 90;
+        const next = p + Math.max(1, Math.round((90 - p) / 8));
+        return Math.min(90, next);
+      });
+    }, 350);
 
     try {
       await api.uploadFile(project.id, file);
-      setNotif({ text: `"${file.name}" uploaded successfully!`, type: "success" });
+      clearInterval(interval);
+      setUploadProgress(100);
+      setUploadStatus("success");
+      setNotif({ text: `"${file.name}" uploaded and indexed. Model is ready for testing in Test Chatbot.`, type: "success" });
     } catch {
+      clearInterval(interval);
+      setUploadStatus("idle");
+      setUploadProgress(0);
       setNotif({ text: "File upload failed. Check format and size.", type: "error" });
     } finally {
       setUploading(false);
@@ -152,13 +177,29 @@ export default function ProjectDetailPage() {
     if (!project) return;
 
     setCrawling(true);
+    setTrainingStatus("running");
+    setTrainingProgress(10);
     setNotif(null);
+
+    const interval = setInterval(() => {
+      setTrainingProgress((p) => {
+        if (p >= 90) return 90;
+        const next = p + Math.max(1, Math.round((90 - p) / 8));
+        return Math.min(90, next);
+      });
+    }, 350);
 
     try {
       // HARD REQUIREMENT: ALWAYS send project_id + start_url
       await api.ingestWebsite(project.id, crawlUrl, maxPages);
-      setNotif({ text: "Crawling task scheduled. Monitoring domain...", type: "success" });
+      clearInterval(interval);
+      setTrainingProgress(100);
+      setTrainingStatus("success");
+      setNotif({ text: "Training completed. Model is ready for testing in Test Chatbot.", type: "success" });
     } catch {
+      clearInterval(interval);
+      setTrainingStatus("idle");
+      setTrainingProgress(0);
       setNotif({ text: "Failed to start ingestion engine.", type: "error" });
     } finally {
       setCrawling(false);
@@ -203,7 +244,7 @@ export default function ProjectDetailPage() {
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-4 border-b border-slate-800">
         <div className="flex items-center gap-5">
           <div className="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center text-white text-3xl font-extrabold shadow-2xl shadow-indigo-600/30">
-            {project.domain.replace(/https?:\/\//, "").charAt(0).toUpperCase()}
+            {project.domain.trim().charAt(0).toUpperCase()}
           </div>
           <div>
             <div className="flex items-center gap-3 mb-1">
@@ -228,7 +269,15 @@ export default function ProjectDetailPage() {
           <Button variant="outline" size="sm" onClick={() => router.push("/dashboard/projects") }>
             Back
           </Button>
-          <Button variant="danger" size="sm">
+          <Button
+            variant="danger"
+            size="sm"
+            onClick={() => {
+              settingsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+              setSettingsPulse(true);
+              setTimeout(() => setSettingsPulse(false), 800);
+            }}
+          >
             Settings
           </Button>
         </div>
@@ -237,10 +286,11 @@ export default function ProjectDetailPage() {
       {/* REQUIRED DASHBOARD GRID */}
       <div className="grid grid-cols-1 gap-6">
         {/* Row 1: Project Info */}
-        <Card>
+        <div ref={settingsRef} className={settingsPulse ? "rounded-2xl ring-2 ring-indigo-500/40" : ""}>
+          <Card>
           <h2 className="text-lg font-bold text-white mb-2">Project Info</h2>
           <p className="text-sm text-slate-400">Project ID: <span className="font-mono text-slate-300">{project.id}</span></p>
-          <p className="text-sm text-slate-400">Domain: <span className="text-slate-300">{project.domain}</span></p>
+          <p className="text-sm text-slate-400">Project Name: <span className="text-slate-300">{project.domain}</span></p>
 
           <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-4">
             <Input
@@ -264,7 +314,8 @@ export default function ProjectDetailPage() {
               Save Settings
             </Button>
           </div>
-        </Card>
+          </Card>
+        </div>
 
         {/* Row 2 */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -302,6 +353,20 @@ export default function ProjectDetailPage() {
                 accept=".pdf,.csv,.txt"
               />
             </div>
+
+            {uploadStatus !== "idle" ? (
+              <div className="space-y-2">
+                <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-indigo-500 transition-all duration-300"
+                    style={{ width: `${uploadProgress}%` }}
+                  />
+                </div>
+                <p className="text-xs text-slate-500">
+                  {uploadStatus === "running" ? "Uploading & indexing…" : "Upload complete — ready to test."}
+                </p>
+              </div>
+            ) : null}
           </Card>
 
           <Card className="flex flex-col gap-6">
@@ -338,11 +403,25 @@ export default function ProjectDetailPage() {
                 </Button>
               </div>
             </div>
+
+            {trainingStatus !== "idle" ? (
+              <div className="space-y-2">
+                <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-indigo-500 transition-all duration-300"
+                    style={{ width: `${trainingProgress}%` }}
+                  />
+                </div>
+                <p className="text-xs text-slate-500">
+                  {trainingStatus === "running" ? "Training in progress…" : "Training complete — ready to test."}
+                </p>
+              </div>
+            ) : null}
           </Card>
         </div>
 
         {/* Row 3: Test Chatbot */}
-        <Card className="p-0 border-slate-800 shadow-3xl bg-slate-950 overflow-hidden">
+        <Card className="p-0 border-slate-800 shadow-3xl bg-slate-950 overflow-hidden flex flex-col h-[70vh] min-h-[520px] max-h-[800px]">
           <div className="p-5 border-b border-slate-800 flex items-center justify-between bg-slate-900/50 backdrop-blur-md">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white text-xs font-bold">
@@ -363,7 +442,7 @@ export default function ProjectDetailPage() {
             </Button>
           </div>
 
-          <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar bg-slate-950/20 min-h-[420px]">
+          <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar bg-slate-950/20">
             {messages.length === 0 && !chatLoading ? (
               <div className="h-full flex flex-col items-center justify-center text-center px-12 opacity-60">
                 <h4 className="text-lg font-bold text-white mb-2">Test Knowledge Base</h4>

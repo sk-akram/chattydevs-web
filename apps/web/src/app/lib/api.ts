@@ -118,11 +118,11 @@ export const api = {
     return data;
   },
 
-  async createProject(domain: string): Promise<{ project_id?: string; id?: string }> {
+  async createProject(name: string): Promise<{ project_id?: string; id?: string }> {
     const res = await fetch(`${API_BASE}/projects`, {
       method: "POST",
       headers: getHeaders(),
-      body: JSON.stringify({ domain }),
+      body: JSON.stringify({ name }),
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data?.error || "Failed to create project");
