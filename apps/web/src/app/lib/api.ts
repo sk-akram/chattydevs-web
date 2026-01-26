@@ -197,11 +197,28 @@ export const api = {
     return data;
   },
 
-  async sendMessage(projectId: string, message: string): Promise<{ reply: string }> {
+  async getChatHistory(projectId: string, sessionId: string): Promise<{
+    session_id: string;
+    messages: Array<{ role: "user" | "bot"; content: string; created_at: string }>;
+  }> {
+    const res = await fetch(
+      `${API_BASE}/chat/history?project_id=${encodeURIComponent(projectId)}&session_id=${encodeURIComponent(sessionId)}`,
+      { headers: getHeaders() }
+    );
+    const data = await res.json();
+    if (!res.ok) throw new Error(data?.error || "Failed to fetch chat history");
+    return data;
+  },
+
+  async sendMessage(
+    projectId: string,
+    message: string,
+    sessionId?: string
+  ): Promise<{ reply: string; session_id?: string }> {
     const res = await fetch(`${API_BASE}/chat`, {
       method: "POST",
       headers: getHeaders(),
-      body: JSON.stringify({ project_id: projectId, message }),
+      body: JSON.stringify({ project_id: projectId, message, session_id: sessionId }),
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data?.error || "Chat failed");

@@ -65,6 +65,9 @@ export default function ProjectDetailPage() {
   const [chatLoading, setChatLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  const [chatSessionId, setChatSessionId] = useState<string>("");
+  const chatIdleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   useEffect(() => {
     let mounted = true;
 
@@ -90,6 +93,42 @@ export default function ProjectDetailPage() {
       mounted = false;
     };
   }, [projectId]);
+
+  useEffect(() => {
+    if (!project?.id) return;
+    const key = `chattydevs_chat_session_${project.id}`;
+    const existing = localStorage.getItem(key) || "";
+    if (!existing) return;
+
+    setChatLoading(true);
+    api
+      .getChatHistory(project.id, existing)
+      .then((data) => {
+        setChatSessionId(data.session_id);
+        setMessages(data.messages.map((m) => ({ role: m.role, content: m.content })));
+
+        if (chatIdleTimerRef.current) clearTimeout(chatIdleTimerRef.current);
+        chatIdleTimerRef.current = setTimeout(() => {
+          localStorage.removeItem(key);
+          setChatSessionId("");
+          setMessages([]);
+        }, 5 * 60 * 1000);
+      })
+      .catch(() => {
+        localStorage.removeItem(key);
+        setChatSessionId("");
+        setMessages([]);
+      })
+      .finally(() => {
+        setChatLoading(false);
+      });
+  }, [project?.id]);
+
+  useEffect(() => {
+    return () => {
+      if (chatIdleTimerRef.current) clearTimeout(chatIdleTimerRef.current);
+    };
+  }, []);
 
   async function handleDeleteProject() {
     if (!project || deletingProject) return;
@@ -236,8 +275,20 @@ export default function ProjectDetailPage() {
     setMessages((prev) => [...prev, { role: "user", content: userMsg }]);
     setChatLoading(true);
 
+    if (chatIdleTimerRef.current) clearTimeout(chatIdleTimerRef.current);
+    chatIdleTimerRef.current = setTimeout(() => {
+      localStorage.removeItem(`chattydevs_chat_session_${project.id}`);
+      setChatSessionId("");
+      setMessages([]);
+    }, 5 * 60 * 1000);
+
     try {
-      const response = await api.sendMessage(project.id, userMsg);
+      const response = await api.sendMessage(project.id, userMsg, chatSessionId || undefined);
+      const nextSessionId = (response as any)?.session_id as string | undefined;
+      if (nextSessionId) {
+        setChatSessionId(nextSessionId);
+        localStorage.setItem(`chattydevs_chat_session_${project.id}`, nextSessionId);
+      }
       setMessages((prev) => [...prev, { role: "bot", content: response.reply }]);
     } catch {
       setMessages((prev) => [
@@ -247,6 +298,14 @@ export default function ProjectDetailPage() {
     } finally {
       setChatLoading(false);
     }
+  }
+
+  function handleResetChat() {
+    if (!project?.id) return;
+    if (chatIdleTimerRef.current) clearTimeout(chatIdleTimerRef.current);
+    localStorage.removeItem(`chattydevs_chat_session_${project.id}`);
+    setChatSessionId("");
+    setMessages([]);
   }
 
   if (loading) return <LoadingState message="Connecting to project..." />;
@@ -467,7 +526,7 @@ export default function ProjectDetailPage() {
                 </div>
               </div>
             </div>
-            <Button variant="ghost" size="sm" onClick={() => setMessages([])}>
+            <Button variant="ghost" size="sm" onClick={handleResetChat}>
               Reset
             </Button>
           </div>
