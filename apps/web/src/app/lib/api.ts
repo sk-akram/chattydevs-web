@@ -158,6 +158,16 @@ export const api = {
     return data;
   },
 
+  async deleteProject(projectId: string): Promise<{ ok: true; project_id: string }> {
+    const res = await fetch(`${API_BASE}/projects/${projectId}`, {
+      method: "DELETE",
+      headers: getHeaders(),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data?.error || "Failed to delete project");
+    return data;
+  },
+
   async uploadFile(projectId: string, file: File): Promise<{ filename?: string; chunks_indexed?: number }> {
     const formData = new FormData();
     formData.append("project_id", projectId);

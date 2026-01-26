@@ -58,6 +58,8 @@ export default function ProjectDetailPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
 
+  const [deletingProject, setDeletingProject] = useState(false);
+
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [chatInput, setChatInput] = useState("");
   const [chatLoading, setChatLoading] = useState(false);
@@ -88,6 +90,25 @@ export default function ProjectDetailPage() {
       mounted = false;
     };
   }, [projectId]);
+
+  async function handleDeleteProject() {
+    if (!project || deletingProject) return;
+    const ok = window.confirm(
+      `Delete project "${project.domain}"? This will permanently remove the project and its chats.`
+    );
+    if (!ok) return;
+
+    setDeletingProject(true);
+    setNotif(null);
+    try {
+      await api.deleteProject(project.id);
+      router.push("/dashboard/projects");
+    } catch {
+      setNotif({ text: "Failed to delete project.", type: "error" });
+    } finally {
+      setDeletingProject(false);
+    }
+  }
 
   async function handleSaveSettings() {
     if (!project || savingSettings) return;
@@ -268,6 +289,15 @@ export default function ProjectDetailPage() {
         <div className="flex gap-2">
           <Button variant="outline" size="sm" onClick={() => router.push("/dashboard/projects") }>
             Back
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleDeleteProject}
+            isLoading={deletingProject}
+            disabled={deletingProject}
+          >
+            Delete
           </Button>
           <Button
             variant="danger"
