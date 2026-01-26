@@ -290,7 +290,18 @@ export default function ProjectDetailPage() {
         localStorage.setItem(`chattydevs_chat_session_${project.id}`, nextSessionId);
       }
       setMessages((prev) => [...prev, { role: "bot", content: response.reply }]);
-    } catch {
+    } catch (e: any) {
+      if (e?.status === 402 || e?.code === "MESSAGE_LIMIT_EXCEEDED") {
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "bot",
+            content:
+              "Your free plan quota is exhausted. Please upgrade your plan to continue chatting.",
+          },
+        ]);
+        return;
+      }
       setMessages((prev) => [
         ...prev,
         { role: "bot", content: "Network disruption. Please try testing again shortly." },

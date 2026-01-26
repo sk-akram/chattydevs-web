@@ -206,7 +206,12 @@ export const api = {
       { headers: getHeaders() }
     );
     const data = await res.json();
-    if (!res.ok) throw new Error(data?.error || "Failed to fetch chat history");
+    if (!res.ok) {
+      const err: any = new Error(data?.error || "Failed to fetch chat history");
+      err.status = res.status;
+      err.code = data?.code;
+      throw err;
+    }
     return data;
   },
 
@@ -221,7 +226,12 @@ export const api = {
       body: JSON.stringify({ project_id: projectId, message, session_id: sessionId }),
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data?.error || "Chat failed");
+    if (!res.ok) {
+      const err: any = new Error(data?.error || "Chat failed");
+      err.status = res.status;
+      err.code = data?.code;
+      throw err;
+    }
     return data;
   },
 };
